@@ -22,3 +22,16 @@ export const isLoggedIn = asyncHandler(async (req, res, next) => {
   req.user = decodeToken;
   next();
 });
+
+export const authorizedRoles = (...roles) =>
+  asyncHandler(async (req, res, next) => {
+    const currentUserRole = req.user.role;
+
+    if (!roles.includes(currentUserRole)) {
+      return next(
+        new AppError("you do not have permission to aceess this route", 400)
+      );
+    }
+
+    next();
+  });

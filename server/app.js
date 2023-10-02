@@ -19,11 +19,13 @@ app.use(
 // importing all routes
 import userRoutes from "./routes/user.routes.js";
 import courseRoutes from "./routes/course.route.js";
+import paymentRoutes from "./routes/payment.route.js";
 import errorMiddleware from "./middleware/error.middleware.js";
 
 // set routes to base url
 app.use("/api/v1/user", userRoutes);
-app.use("/api/v1/courses", courseRoutes)
+app.use("/api/v1/courses", courseRoutes);
+app.use("/api/v1/payment", paymentRoutes);
 
 // page not found
 app.all("*", (req, res) => {

@@ -1,6 +1,7 @@
 import Payment from "../models/payment.model.js";
 import User from "../models/user.model.js";
 import Course from "../models/course.model.js";
+import MyCourse from "../models/my.course.model.js";
 import { razorpay } from "../server.js";
 import crypto from "crypto";
 import asyncHandler from "../middleware/asyncHandler.middleware.js";
@@ -111,6 +112,7 @@ export const verify = asyncHandler(async (req, res, next) => {
 
   const course = await Course.findById(courseId);
   const user = await User.findById(id);
+  const myCourse = await MyCourse.findOne({ userId: id });
 
   if (!course || !user) {
     return next(new AppError("user or course does not exist.", 400));
@@ -166,7 +168,13 @@ export const verify = asyncHandler(async (req, res, next) => {
     courseLink: `http://localhost:3000/api/v1/courses/${courseId}`,
   });
 
+  myCourse.myPurchasedCourses.push({
+    courseId,
+    lectureProgress: [],
+  });
+
   await payment.save();
+  await myCourse.save();
 
   res.status(200).json({
     success: true,

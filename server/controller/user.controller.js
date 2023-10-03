@@ -2,6 +2,7 @@ import cloudinary from "cloudinary";
 import fs from "fs";
 import crypto from "crypto";
 import User from "../models/user.model.js";
+import MyCourse from "../models/my.course.model.js";
 import asyncHandler from "../middleware/asyncHandler.middleware.js";
 import AppError from "../utils/error.utils.js";
 import { forgotPasswordMail, registerMail } from "../utils/mail.utils.js";
@@ -86,6 +87,11 @@ export const register = asyncHandler(async (req, res, next) => {
 
   res.cookie("token", token, cookieOptions);
   registerMail(email);
+
+  new MyCourse({
+    userId: user._id.toString(),
+    myPurchasedCourses: [],
+  }).save();
 
   res.status(200).json({
     success: true,

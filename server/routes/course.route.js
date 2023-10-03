@@ -1,6 +1,10 @@
 import { Router } from "express";
 const router = Router();
-import { authorizedRoles, isLoggedIn } from "../middleware/auth.middleware.js";
+import {
+  authorizedRoles,
+  isLoggedIn,
+  isPurchasedCourse,
+} from "../middleware/auth.middleware.js";
 import { upload } from "../middleware/multer.middleware.js";
 import {
   addLectureIntoCourseById,
@@ -32,7 +36,7 @@ router
 
 router
   .route("/:courseId")
-  .get(isLoggedIn, getLecturesByCourseId)
+  .get(isLoggedIn, isPurchasedCourse, getLecturesByCourseId)
   .post(
     isLoggedIn,
     authorizedRoles("ADMIN"),

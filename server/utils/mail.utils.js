@@ -37,3 +37,55 @@ export const forgotPasswordMail = async (email, link) => {
 
   mail(email, subject, message);
 };
+
+export const coursePurchasingMail = async (email, details) => {
+  let subject = `thank yu for purchasing ${details.courseName} course`;
+  let message = `<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <style>
+          * {
+            margin: 0;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+          }
+
+          div {
+            margin-left: 20px;
+          }
+
+          p {
+            margin-bottom: 10px;
+            padding-left: 5px;
+            font-size: 17px;
+          }
+
+          p span {
+            color: orangered;
+            font-weight: bold;
+          }
+
+          a {
+            text-decoration: none;
+            cursor: pointer;
+            padding: 5px 12px;
+            background: lightgreen;
+            border-radius: 5px;
+            margin-left: 50px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <p>course: ${details.courseName}</p>
+          <p>category: ${details.courseExpiry} months</p>
+          <p>order id: ${details.orderId}</p>
+          <p>payment id: ${details.paymentId}</p>
+          <p>total price: ${details.coursePrice}₹</p>
+
+          <a href="${details.courseLink}">start learning</a>
+        </div>
+      </body>
+    </html>`;
+
+  mail(email, subject, message);
+};

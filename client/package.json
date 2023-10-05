@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.6",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "daisyui": "^3.8.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

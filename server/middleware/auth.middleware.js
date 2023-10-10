@@ -9,7 +9,7 @@ export const isLoggedIn = asyncHandler(async (req, res, next) => {
 
   if (!token) {
     return next(
-      new AppError("unauthorised user or token is expire. please login", 400)
+      new AppError("unauthorised user or token is expire. please login", 401)
     );
   }
 
@@ -17,7 +17,7 @@ export const isLoggedIn = asyncHandler(async (req, res, next) => {
 
   if (!decodeToken) {
     return next(
-      new AppError("unauthorised user or token is expire. please login", 400)
+      new AppError("unauthorised user or token is expire. please login", 401)
     );
   }
 
@@ -31,7 +31,7 @@ export const authorizedRoles = (...roles) =>
 
     if (!roles.includes(currentUserRole)) {
       return next(
-        new AppError("you do not have permission to aceess this route", 400)
+        new AppError("you do not have permission to aceess this route", 403)
       );
     }
 
@@ -45,7 +45,7 @@ export const isPurchasedCourse = asyncHandler(async (req, res, next) => {
   const user = await User.findById(id);
 
   if (!user) {
-    return next(new AppError("user not found", 400));
+    return next(new AppError("user not found", 401));
   }
 
   if (user.role === "ADMIN") {
@@ -56,7 +56,7 @@ export const isPurchasedCourse = asyncHandler(async (req, res, next) => {
 
   if (!payment) {
     return next(
-      new AppError(`you don't have permission to access this course`, 400)
+      new AppError(`you don't have permission to access this course`, 403)
     );
   }
 
@@ -66,7 +66,7 @@ export const isPurchasedCourse = asyncHandler(async (req, res, next) => {
 
   if (courseIndex === -1) {
     return next(
-      new AppError(`you don't have permission to access this course`, 400)
+      new AppError(`you don't have permission to access this course`, 403)
     );
   }
 
@@ -78,7 +78,7 @@ export const isPurchasedCourse = asyncHandler(async (req, res, next) => {
     next();
   } else {
     return next(
-      new AppError(`you don't have permission to access this course`, 400)
+      new AppError(`you don't have permission to access this course`, 403)
     );
   }
 });

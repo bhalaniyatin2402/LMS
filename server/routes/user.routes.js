@@ -18,7 +18,7 @@ router.route("/register").post(upload.single("avatar"), register);
 router
   .route("/me")
   .get(isLoggedIn, getLoggedInUserDetails)
-  .post(isLoggedIn, upload.single("avatar"), updateProfile);
+  .put(isLoggedIn, upload.single("avatar"), updateProfile);
 
 router.route("/login").post(login);
 router.route("/logout").get(isLoggedIn, logout);

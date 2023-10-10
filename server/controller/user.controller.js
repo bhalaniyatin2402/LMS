@@ -96,7 +96,7 @@ export const register = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "user registered successfully",
-    user,
+    token
   });
 });
 
@@ -134,7 +134,8 @@ export const login = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "login successfully",
-    user,
+    role: user.role,
+    token,
   });
 });
 
@@ -165,7 +166,7 @@ export const getLoggedInUserDetails = asyncHandler(async (req, res, next) => {
   const user = await User.findById(id);
 
   if (!user) {
-    return next(new AppError("user not found", 400));
+    return next(new AppError("user not found", 401));
   }
 
   res.status(200).json({
@@ -185,18 +186,18 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
 
   if (!email) {
-    return next(new AppError("email is required for reset password", 400));
+    return next(new AppError("email is required!", 400));
   }
 
   const user = await User.findOne({ email });
 
   if (!user) {
-    return next(new AppError("user not exist on this email", 400));
+    return next(new AppError("please enter your email", 401));
   }
 
   const resetToken = await user.generateForgotPasswordToken();
 
-  const resetTokenLink = `${process.env.FRONT_URL}/api/v1/user/reset/${resetToken}`;
+  const resetTokenLink = `${process.env.FRONT_URL}/reset/password/${resetToken}`;
 
   try {
     await forgotPasswordMail(email, resetTokenLink);
@@ -233,7 +234,7 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
   if (!password || !confirmPassword) {
     return next(
       new AppError(
-        "password and confirm password are required to reset password",
+        "password and confirm password is required",
         400
       )
     );
@@ -280,12 +281,16 @@ export const changePassword = asyncHandler(async (req, res, next) => {
     return next(new AppError("all field are required", 400));
   }
 
+  if(oldPassword == newPassword) {
+    return next(new AppError("new password match old password", 400));
+  }
+
   const user = await User.findById(id).select("+password");
 
   const verifyPassword = await user.comparePassword(oldPassword);
 
   if (!verifyPassword) {
-    return next(new AppError("old password does not metch", 400));
+    return next(new AppError("old password not metch", 400));
   }
 
   user.password = newPassword;

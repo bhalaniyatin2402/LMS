@@ -1,0 +1,35 @@
+@import "../../mixins.scss";
+
+#avatarLabel {
+  .profile-image {
+    position: relative;
+    .avatarImage {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      cursor: pointer;
+      @include sm {
+        width: 120px;
+        height: 120px;
+      }
+    }
+    .edit {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      font-size: 22px;
+      background-color: lightblue;
+      transform: translate(-30%, -30%);
+      border-radius: 12px;
+    }
+  }
+  #avatar {
+    display: none;
+  }
+}
+
+.loginlink {
+  background-color: #e5e6e6;
+  text-align: center;
+  padding: 10px;
+}

@@ -1,9 +1,10 @@
 import { useSelector } from "react-redux";
+
 import NavLink from "../ui/NavLink";
 
 function Navbar() {
   // check for user is logged in and user role
-  const { isLoggedIn, role } = useSelector((state) => state?.auth);
+  const { isLoggedIn, role } = useSelector((state) => state.auth);
 
   return (
     <>
@@ -25,13 +26,10 @@ function Navbar() {
         <>
           <li>
             <NavLink
-              href="/user/account"
+              href="/user/profile"
               title="My Profile"
               className="bg-orange-300"
             />
-          </li>
-          <li>
-            <NavLink href="#" title="Logout" className="bg-red-400 lg:hidden" />
           </li>
         </>
       ) : (

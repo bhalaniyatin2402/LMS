@@ -1,0 +1,30 @@
+@import "../../mixins.scss";
+
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e5e6e6;
+  height: 80vh;
+
+  form {
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 25px 15px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 4px rgb(0, 38, 255);
+
+    .title {
+      font-size: 17x;
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-bottom: 25px;
+      @include sm {
+        font-size: 22px;
+      }
+    }
+  }
+}

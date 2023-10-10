@@ -1,0 +1,105 @@
+@import "../../../mixins.scss";
+
+.profile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e5e6e6;
+  min-height: 80vh;
+
+  .container {
+    width: 85%;
+    margin: 20px 0;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 4px rgb(0, 38, 255);
+    @include sm {
+      width: auto;
+      padding: 25px 35px;
+    }
+
+    .title {
+      font-size: 17x;
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+      @include sm {
+        margin-bottom: 40px;
+        font-size: 22px;
+      }
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      padding: 0 20px;
+      @include md {
+        padding: 0 40px;
+        flex-direction: row;
+        gap: 100px;
+      }
+
+      .left {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          border-radius: 50%;
+          width: 140px;
+          height: 140px;
+          @include sm {
+            width: 200px;
+            height: 200px;
+          }
+        }
+      }
+
+      .right {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        align-items: flex-start;
+        flex-direction: column;
+
+        .row {
+          width: 100%;
+          display: flex;
+          flex-wrap: wrap;
+          @include sm {
+            width: 300px;
+          }
+
+          h3 {
+            width: 80px;
+            font-size: 17px;
+            font-weight: bold;
+            @include sm {
+              width: 90px;
+              font-size: 20px;
+            }
+          }
+
+          span {
+            margin-top: auto;
+            margin-bottom: auto;
+            font-size: 14px;
+            letter-spacing: 1px;
+            @include sm {
+              font-size: 18px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -7,7 +7,7 @@ config();
 const app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "http://localhost:5173"],
+  origin: [process.env.FRONT_URL, process.env.FRONT_URL],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true
 };
@@ -26,9 +26,9 @@ import userRoutes from "./routes/user.routes.js";
 
 // set routes to base url
 app.use("/api/v1/user", userRoutes);
-app.use("/api/v1/courses", courseRoutes);
+app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/payment", paymentRoutes);
-app.use("/api/v1/my-courses", myCourseRoutes);
+app.use("/api/v1/my-course", myCourseRoutes);
 
 // page not found
 app.all("*", (req, res) => {

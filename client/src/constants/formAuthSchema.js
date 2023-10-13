@@ -34,7 +34,7 @@ export const registerSchema = yup.object({
     )
     .test(
       "FILE_SIZE",
-      "photo size less than 500kb",
+      "photo size exceed 500kb",
       (value) => !value || (value && value.size <= 512 * 1024)
     ),
 });

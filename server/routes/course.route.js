@@ -15,7 +15,17 @@ import {
   removeLectureFromCourseById,
   updateCourse,
   updateLectureIntoCourseById,
+  getCategoryList,
+  getInstructorList
 } from "../controller/course.controller.js";
+
+
+router
+  .route('/category')
+  .get(getCategoryList)
+router
+  .route('/instructor')
+  .get(getInstructorList)
 
 router
   .route("/")

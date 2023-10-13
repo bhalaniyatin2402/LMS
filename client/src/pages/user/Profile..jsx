@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 
@@ -15,6 +15,7 @@ const dummyProdile =
 function Profile() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const role = useOutletContext();
   const { data, isLoading, error } = useGetUserDetailQuery();
   const [logout, { isLoading: loading }] = useLogoutMutation();
 
@@ -30,6 +31,7 @@ function Profile() {
     if (res?.data?.success) {
       dispatch(setLogout());
       toast.success("logout successful");
+      navigate("/login");
     } else {
       toast.success("logout failed");
     }

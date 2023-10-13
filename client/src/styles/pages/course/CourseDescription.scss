@@ -1,0 +1,124 @@
+@import "../../../mixins.scss";
+
+.description {
+  background-color: #e5e6e6;
+  min-height: 85vh;
+  padding: 40px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .container {
+    width: 80%;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 4px rgb(0, 38, 255);
+    @include md {
+      margin: 20px;
+      padding: 25px 35px;
+      width: 900px;
+    }
+
+    .title {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 18px;
+      @include sm {
+        margin-bottom: 35px;
+        font-size: 25px;
+      }
+    }
+    .content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 30px;
+      @include md {
+        gap: 70px;
+        flex-direction: row;
+      }
+      .left {
+        // border: 1px solid red;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+
+        @include md {
+          width: 50%;
+        }
+
+        img {
+          width: 100%;
+          border-radius: 12px;
+          @include md {
+            width: 700px;
+          }
+        }
+
+        button {
+          width: auto;
+          margin: 20px auto 0 auto;
+          background-color: #e97862;
+          color: white;
+          font-weight: bold;
+          font-size: 15px;
+          @include sm {
+            width: 200px;
+            font-size: 17px;
+          }
+        }
+      }
+      .right {
+        // border: 1px solid red;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        flex-direction: column;
+        @include md {
+          width: 50%;
+        }
+
+        .desc {
+          font-size: 12px;
+          line-height: 1.2;
+          font-weight: bold;
+          @include sm {
+            font-size: 17px;
+          }
+        }
+
+        .price {
+          font-size: 20px;
+          color: orangered;
+          font-weight: bold;
+          margin-top: 15px;
+        }
+
+        .field {
+          margin-top: 8px;
+          font-size: 17px;
+          font-weight: bold;
+          display: flex;
+          flex-direction: column;
+          @include sm {
+            flex-direction: row;
+          }
+          span {
+            // margin-left: 6px;
+            font-weight: normal;
+            font-size: 16px;
+            @include sm {
+              margin-left: 6px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,10 +1,11 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import Navbar from "./Navbar";
 
 function Header() {
   const locaton = useLocation();
+  const navigate = useNavigate();
 
   // drawer closed when the page changes
   useEffect(() => {
@@ -13,7 +14,7 @@ function Header() {
   }, [locaton]);
 
   return (
-    <div className="drawer">
+    <div className="drawer z-20">
       <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col">
         {/* Navbar */}
@@ -40,7 +41,10 @@ function Header() {
             </label>
           </div>
           {/* header logo */}
-          <div className="flex-1 px-2 mx-2 text-3xl tracking-wide font-bold text-blue-500 lg:ml-14">
+          <div
+            className="flex-1 px-2 mx-2 text-3xl tracking-wide font-bold text-blue-500 lg:ml-14 cursor-pointer"
+            onClick={() => navigate("/")}
+          >
             Coursify
           </div>
           <div className="flex-none hidden lg:block">

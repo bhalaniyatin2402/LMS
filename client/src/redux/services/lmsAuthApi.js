@@ -1,18 +1,20 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
 
+export const setHeaders = (headers) => {
+  const token = Cookies.get("token");
+
+  if (token) {
+    return { Authorization: `Bearer token=${token}` };
+  }
+};
+
 export const lmsAuthApi = createApi({
   reducerPath: "lmsAuth",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5713/api/v1/user",
+    baseUrl: "http://localhost:3000/api/v1/user",
     credentials: "include",
-    prepareHeaders: (headers) => {
-      const token = Cookies.get("token");
-
-      if (token) {
-        headers.set("authorization", `Bearer token=${token}`);
-      }
-    },
+    headers: setHeaders(),
   }),
   endpoints: (builder) => ({
     register: builder.mutation({
@@ -22,10 +24,10 @@ export const lmsAuthApi = createApi({
         body: data,
       }),
       transformResponse: (res) => {
-        localStorage.setItem('isLoggedIn', true)
-        localStorage.setItem('role', 'USER')
-        return res
-      }
+        localStorage.setItem("isLoggedIn", true);
+        localStorage.setItem("role", "USER");
+        return res;
+      },
     }),
     login: builder.mutation({
       query: (data) => ({

@@ -44,6 +44,8 @@ export const createCourse = asyncHandler(async (req, res, next) => {
     try {
       const result = await cloudinary.v2.uploader.upload(req.file.path, {
         folder: "lms",
+        width: 250,
+        height: 200,
       });
 
       if (result) {
@@ -76,7 +78,22 @@ export const createCourse = asyncHandler(async (req, res, next) => {
  */
 
 export const getAllCourses = asyncHandler(async (req, res, next) => {
-  const courses = await Course.find().select("-lectures");
+  const query = req.query;
+
+  let courses = [];
+  if (Object.keys(query).length !== 0) {
+    let categories = query.category.split(",");
+    let instructors = query.instructor.split(",");
+
+    courses = await Course.find({
+      $and: [
+        { category: { $in: categories } },  
+        { createdBy: { $in: instructors } },
+      ],
+    }).select("-lectures");
+  } else {
+    courses = await Course.find().select("-lectures");
+  }
 
   if (!courses) {
     return next(new AppError("courses not found", 400));
@@ -112,6 +129,8 @@ export const updateCourse = asyncHandler(async (req, res, next) => {
 
       const result = await cloudinary.v2.uploader.upload(req.file.path, {
         folder: "lms",
+        width: 250,
+        height: 200,
       });
 
       if (result) {
@@ -178,6 +197,7 @@ export const getLecturesByCourseId = asyncHandler(async (req, res, next) => {
     success: true,
     message: "course lectures fetch successfully",
     lectures: course.lectures,
+    title: course.title
   });
 });
 
@@ -191,14 +211,14 @@ export const addLectureIntoCourseById = asyncHandler(async (req, res, next) => {
   const { courseId } = req.params;
   const { name, description } = req.body;
 
-  if (!name || !description) {
+  if (!name || !description || !req.file) {
     return next(new AppError("all fields are required", 400));
   }
 
   const course = await Course.findById(courseId);
 
   if (!course) {
-    return next(new AppError("course not found on this id", 400));
+    return next(new AppError("course not found!", 400));
   }
 
   const lectureData = {
@@ -355,3 +375,51 @@ export const removeLectureFromCourseById = asyncHandler(
     });
   }
 );
+
+/**
+ * @CATEGORY_LIST
+ * @ROUTE @GET
+ * @ACCESS public {{url}}/api/v1/course/category
+ */
+
+export const getCategoryList = asyncHandler(async (req, res, next) => {
+  const courses = await Course.find({}, { _id: 0, category: 1 });
+
+  if (!courses) {
+    return next(new AppError("courses not found", 400));
+  }
+
+  const courseList = [];
+  courses.map((c, i, courses) => {
+    if (!courseList.includes(c.category)) {
+      return courseList.push(c.category);
+    }
+    return
+  });
+
+  res.status(200).json(courseList);
+});
+
+/**
+ * @INSTRUCTOR_LIST
+ * @ROUTE @GET
+ * @ACCESS public {{url}}/api/v1/course/instructor
+ */
+
+export const getInstructorList = asyncHandler(async (req, res, next) => {
+  const courses = await Course.find({}, { _id: 0, createdBy: 1 });
+
+  if (!courses) {
+    return next(new AppError("coursse not found", 400));
+  }
+
+  const instructorList = [];
+  courses.map((c, i, courses) => {
+    if (!instructorList.includes(c.createdBy)) {
+      return instructorList.push(c.createdBy);
+    }
+    return
+  });
+
+  res.status(200).json(instructorList);
+});

@@ -1,9 +1,9 @@
 import "../../styles/components/FormLayout.scss";
 
-function FormLayout({ children, title, onSubmit }) {
+function FormLayout({ children, title, onSubmit, className, classname }) {
   return (
-    <main className="form">
-      <form noValidate onSubmit={onSubmit}>
+    <main className={`form ${classname}`}>
+      <form noValidate onSubmit={onSubmit} className={className}>
         <h1 className="title">{title}</h1>
         {children}
       </form>

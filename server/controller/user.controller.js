@@ -163,6 +163,10 @@ export const logout = asyncHandler(async (req, res, next) => {
 export const getLoggedInUserDetails = asyncHandler(async (req, res, next) => {
   const { id } = req.user;
 
+  if(!id) {
+    return next(new AppError("user not found", 401));
+  }
+
   const user = await User.findById(id);
 
   if (!user) {

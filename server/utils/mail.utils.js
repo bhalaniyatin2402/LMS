@@ -77,7 +77,7 @@ export const coursePurchasingMail = async (email, details) => {
       <body>
         <div class="container">
           <p>course: ${details.courseName}</p>
-          <p>category: ${details.courseExpiry} months</p>
+          <p>Course Access: ${details.courseExpiry} months</p>
           <p>order id: ${details.orderId}</p>
           <p>payment id: ${details.paymentId}</p>
           <p>total price: ${details.coursePrice}₹</p>

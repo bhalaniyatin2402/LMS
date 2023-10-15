@@ -38,7 +38,7 @@ export const getApiKey = asyncHandler(async (req, res, next) => {
 
       if (isPurchased) {
         return next(
-          new AppError("you have already purchased this course", 400)
+          new AppError("you have already purchased this course", 502)
         );
       }
     }
@@ -68,11 +68,11 @@ export const checkout = asyncHandler(async (req, res, next) => {
   }
 
   if (user.role === "ADMIN") {
-    return next(new AppError("admin cannot purchase the course", 400));
+    return next(new AppError("admin cannot purchase course", 502));
   }
 
   if (!amount) {
-    return next(new AppError("amount is required to create order", 400));
+    return next(new AppError("amount is required!", 400));
   }
 
   const options = {
@@ -85,6 +85,7 @@ export const checkout = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "order created successfuly",
+    user,
     order,
   });
 });
@@ -103,23 +104,24 @@ export const verify = asyncHandler(async (req, res, next) => {
 
   const expectedSignature = crypto
     .createHmac("sha256", process.env.RAZORPAY_SECRET)
-    .update(`${razorpay_payment_id}|${razorpay_signature}`)
+    .update(`${razorpay_order_id}|${razorpay_payment_id}`)
     .digest("hex");
 
   if (expectedSignature !== razorpay_signature) {
-    return next(new AppError("Payment not verified, please try again.", 400));
+    return res.redirect("http://localhost:5173/payment/failure");
   }
 
-  const course = await Course.findById(courseId);
+  const course = await Course.findById(courseId).select("-lectures");
   const user = await User.findById(id);
   const myCourse = await MyCourse.findOne({ userId: id });
+  console.log(course);
 
   if (!course || !user) {
     return next(new AppError("user or course does not exist.", 400));
   }
 
   if (user.role === "ADMIN") {
-    return next(new AppError("user cannot purchas the course", 400));
+    return next(new AppError("admin cannot purchas course", 502));
   }
 
   const payment = await Payment.findOne({ userId: id });
@@ -153,7 +155,7 @@ export const verify = asyncHandler(async (req, res, next) => {
     ].purchaseDetails.find((detail) => detail.expirationDate > Date.now());
 
     if (isUserAlreadyPurchased) {
-      return next(new AppError("you have already purchased this course", 400));
+      return next(new AppError("you already purchased this course", 502));
     } else {
       payment.purchasedCourse[courseIndex].purchaseDetails.push(details);
     }
@@ -165,7 +167,7 @@ export const verify = asyncHandler(async (req, res, next) => {
     orderId: razorpay_order_id,
     paymentId: razorpay_payment_id,
     coursePrice: course.price,
-    courseLink: `http://localhost:3000/api/v1/courses/${courseId}`,
+    courseLink: `http://localhost:5173/course/${courseId}`,
   });
 
   myCourse.myPurchasedCourses.push({
@@ -176,8 +178,5 @@ export const verify = asyncHandler(async (req, res, next) => {
   await payment.save();
   await myCourse.save();
 
-  res.status(200).json({
-    success: true,
-    message: `now you can accesss ${course.title} course`,
-  });
+  res.redirect(`http://localhost:5173/payment/success?courseId=${courseId}`);
 });

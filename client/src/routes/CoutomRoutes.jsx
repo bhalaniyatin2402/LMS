@@ -14,8 +14,9 @@ import ResetPassword from "../pages/ResetPassword";
 import Profile from "../pages/user/Profile.";
 import EditProfile from "../pages/user/EditProfile";
 import ChangePassword from "../pages/user/ChangePassword";
-import DisplayLectures from "../pages/Lecture/DisplayLectures";
 import CourseDescription from "../pages/course/CourseDescription";
+import Checkout from "../pages/payment/Checkout";
+import DisplayLectures from "../pages/Lecture/DisplayLectures";
 
 import CreateCourse from "../pages/course/CreateCourse";
 import UpdateCourse from "../pages/course/UpdateCourse";
@@ -23,6 +24,8 @@ import AddLecture from "../pages/Lecture/AddLecture";
 import UpdateLecture from "../pages/Lecture/UpdateLecture";
 
 import PageNotFound from "../pages/PageNotFound";
+import PaymentSuccess from "../pages/payment/PaymentSuccess";
+import PaymentFailure from "../pages/payment/PaymentFailure";
 
 function CoutomRoutes() {
   return (
@@ -42,6 +45,9 @@ function CoutomRoutes() {
         <Route path="/user/edit-profile" element={<EditProfile />} />
         <Route path="/user/change-password" element={<ChangePassword />} />
         <Route path="/course/description" element={<CourseDescription />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/payment/success" element={<PaymentSuccess />} />
+        <Route path="/payment/failure" element={<PaymentFailure />} />
         <Route path="/course/:courseId" element={<DisplayLectures />} />
       </Route>
 

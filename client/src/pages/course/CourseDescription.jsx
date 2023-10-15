@@ -45,11 +45,17 @@ function CourseDescription() {
         <div className="content">
           <div className="left">
             <img src={state?.thumbnail?.secure_url} />
-            <button
+            {/* <button
               className="btn btn-sm sm:btn-md"
               onClick={() => navigate(`/course/${state?._id}`)}
             >
               Go To Course
+            </button> */}
+            <button
+              className="btn btn-sm sm:btn-md"
+              onClick={() => navigate(`/checkout`, { state })}
+            >
+              Enroll Now
             </button>
           </div>
           <div className="right">

@@ -1,0 +1,90 @@
+@import "../../mixins.scss";
+
+.checkout {
+  height: 85vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .container {
+    border-radius: 10px;
+    width: 90%;
+    padding: 25px 12px;
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffff;
+    @include sm {
+      width: 100%;
+      width: 450px;
+    }
+    h1 {
+      font-size: 21px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      @include sm {
+          font-size: 26px;
+          letter-spacing: 3px;
+      }
+    }
+
+    .course-data {
+      display: flex;
+      gap: 15px;
+      width: 80%;
+      justify-content: center;
+      align-items: center;
+      @include sm  {
+          width: 80%;
+      }
+      img {
+        width: 90px;
+        height: 40px;
+        border-radius: 5px;
+        @include sm {
+            width: 100px;
+            height: 60px;
+        }
+      }
+      h2 {
+        font-size: 12px;
+        font-weight: bold;
+        @include sm {
+            font-size: 18px;
+        }
+      }
+    }
+
+    .course-time {
+      font-size: 18px;
+      font-weight: bold;
+      span {
+        font-weight: normal;
+        font-size: 14px;
+    }
+    @include sm {
+        font-size: 20px;
+        span {  
+            font-size: 16px;
+        }   
+      }
+    }
+    .course-price {
+      font-size: 20px;
+      font-weight: bold;
+      border-bottom: 1px solid black;
+      span {
+        font-size: 18px;
+        font-weight: normal;
+        color: orangered;
+      }
+      @include sm {
+        font-size: 24px;
+        span {
+            font-size: 21px;
+        }
+      }
+    }
+  }
+}

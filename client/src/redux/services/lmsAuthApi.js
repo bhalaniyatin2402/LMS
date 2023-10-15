@@ -40,6 +40,7 @@ export const lmsAuthApi = createApi({
         localStorage.setItem("role", response?.role);
         return response;
       },
+      invalidatesTags: ['Me']
     }),
     logout: builder.mutation({
       query: () => ({
@@ -49,6 +50,7 @@ export const lmsAuthApi = createApi({
         localStorage.clear();
         return res;
       },
+      invalidatesTags: ['Me']
     }),
     getUserDetail: builder.query({
       query: () => ({

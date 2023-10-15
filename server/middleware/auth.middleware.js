@@ -55,9 +55,7 @@ export const isPurchasedCourse = asyncHandler(async (req, res, next) => {
   const payment = await Payment.findOne({ userId: id });
 
   if (!payment) {
-    return next(
-      new AppError(`you don't have permission to access this course`, 403)
-    );
+    return next(new AppError(`you can't access this course`, 403));
   }
 
   const courseIndex = payment.purchasedCourse.findIndex(
@@ -65,9 +63,7 @@ export const isPurchasedCourse = asyncHandler(async (req, res, next) => {
   );
 
   if (courseIndex === -1) {
-    return next(
-      new AppError(`you don't have permission to access this course`, 403)
-    );
+    return next(new AppError(`you can't access this course`, 403));
   }
 
   const isPurchased = payment.purchasedCourse[courseIndex].purchaseDetails.find(
@@ -77,8 +73,6 @@ export const isPurchasedCourse = asyncHandler(async (req, res, next) => {
   if (isPurchased) {
     next();
   } else {
-    return next(
-      new AppError(`you don't have permission to access this course`, 403)
-    );
+    return next(new AppError(`you can't access this course`, 403));
   }
 });

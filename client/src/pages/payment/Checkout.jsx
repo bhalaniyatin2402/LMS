@@ -26,7 +26,7 @@ function Checkout() {
     toast.error(error?.data?.message);
   }
 
-  if (state === null) {
+  if (state === null || !state) {
     navigate(`/courses`);
   }
 

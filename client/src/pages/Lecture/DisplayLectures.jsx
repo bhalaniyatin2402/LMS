@@ -24,7 +24,7 @@ function DisplayLectures() {
     if (!currLect || isNaN(currLect) || currLect > data?.lectures.length) {
       setCurrentLecture(0);
     } else {
-      setCurrentLecture(currLect)
+      setCurrentLecture(currLect);
     }
   }, []);
 
@@ -76,14 +76,18 @@ function DisplayLectures() {
             >
               overview
             </a>
-            <a
-              onClick={() => setTab("notes")}
-              className={`tab tab-bordered ${tab === "notes" && "tab-active"}`}
-            >
-              Notes
-            </a>
+            {role !== "ADMIN" && (
+              <a
+                onClick={() => setTab("notes")}
+                className={`tab tab-bordered ${
+                  tab === "notes" && "tab-active"
+                }`}
+              >
+                Notes
+              </a>
+            )}
           </div>
-          <div className="content">
+          <div className="content relative">
             {tab === "overview" && (
               <div className="overview">
                 <h2>{data?.lectures[currentLecture]?.name}</h2>
@@ -92,7 +96,11 @@ function DisplayLectures() {
             )}
             {tab === "notes" && (
               <div className="notes">
-                <LectureNotes />
+                <LectureNotes
+                  lectures={data?.lectures}
+                  courseId={courseId}
+                  currentLecture={currentLecture}
+                />
               </div>
             )}
           </div>

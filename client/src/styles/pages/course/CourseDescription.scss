@@ -43,7 +43,6 @@
         flex-direction: row;
       }
       .left {
-        // border: 1px solid red;
         width: 100%;
         display: flex;
         flex-direction: column;
@@ -74,7 +73,6 @@
         }
       }
       .right {
-        // border: 1px solid red;
         width: 100%;
         display: flex;
         justify-content: center;
@@ -110,7 +108,6 @@
             flex-direction: row;
           }
           span {
-            // margin-left: 6px;
             font-weight: normal;
             font-size: 16px;
             @include sm {

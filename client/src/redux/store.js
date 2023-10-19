@@ -5,12 +5,14 @@ import { lmsCourseApi } from "./services/lmsCourseApi";
 import { lmsPaymentApi } from "./services/lmsPaymentApi";
 // services reducer
 import authReducer from "./slices/AuthSlice";
+import { lmsMyCourseApi } from "./services/lmsMyCourseApi";
 
 const store = configureStore({
   reducer: {
     [lmsAuthApi.reducerPath]: lmsAuthApi.reducer,
     [lmsCourseApi.reducerPath]: lmsCourseApi.reducer,
     [lmsPaymentApi.reducerPath]: lmsPaymentApi.reducer,
+    [lmsMyCourseApi.reducerPath]: lmsMyCourseApi.reducer,
     auth: authReducer,
   },
   devTools: true,
@@ -19,7 +21,9 @@ const store = configureStore({
       lmsAuthApi.middleware,
       lmsCourseApi.middleware,
       lmsPaymentApi.middleware,
+      lmsMyCourseApi.middleware
     ]),
 });
 
 export default store;
+

@@ -1,5 +1,6 @@
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { BsArrowRight } from "react-icons/bs";
 import toast from "react-hot-toast";
 
 import { useGetUserDetailQuery } from "../../redux/services/lmsAuthApi";
@@ -87,6 +88,14 @@ function Profile() {
           </div>
         </div>
       </div>
+      {role === "USER" && (
+        <div className="my-course">
+          <span>
+            <Link to="/user/courses">My Courses</Link>
+          </span>
+          <BsArrowRight />
+        </div>
+      )}
     </main>
   );
 }

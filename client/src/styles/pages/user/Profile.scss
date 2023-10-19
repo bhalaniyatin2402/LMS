@@ -2,10 +2,11 @@
 
 .profile {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: #e5e6e6;
-  min-height: 80vh;
+  min-height: 85vh;
 
   .container {
     width: 85%;
@@ -100,6 +101,18 @@
           }
         }
       }
+    }
+  }
+
+  .my-course{
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+    color: blue;
+    cursor: pointer;
+    span {
+      text-decoration: underline;
     }
   }
 }

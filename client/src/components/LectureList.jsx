@@ -4,6 +4,10 @@ import { BiEditAlt } from "react-icons/bi";
 import toast from "react-hot-toast";
 
 import { useRemoveLectureMutation } from "../redux/services/lmsCourseApi";
+import {
+  useGetLectureProgressQuery,
+  useUpdateLectureMarkMutation,
+} from "../redux/services/lmsMyCourseApi";
 
 function LectureList({
   currentLecture,
@@ -16,6 +20,13 @@ function LectureList({
   const navigate = useNavigate();
   const [removeLectureId, setRemoveLectureId] = useState("");
   const [removeLecture, { isLoading }] = useRemoveLectureMutation();
+  const {
+    data,
+    isLoading: markLoading,
+    error: markError,
+  } = useGetLectureProgressQuery(courseId);
+  const [updateLecture, { isLoading: setMarkLoading, error: setMarkError }] =
+    useUpdateLectureMarkMutation();
 
   async function handleRemoveLecture(e, lectureId) {
     const res = await removeLecture({ courseId, lectureId });
@@ -23,13 +34,27 @@ function LectureList({
       if (res?.error?.status === 403) {
         return toast.error("access denied to remove lecture");
       }
-      toast.error(res?.error?.data?.message);
+      toast.error(res?.error?.data?.message); 
     }
     if (res?.data?.success) {
       toast.success("lecture removed successfully");
       getLecture(courseId);
     }
     setRemoveLectureId(null);
+  }
+
+  if (markLoading) {
+    return;
+  }
+
+  async function updateLectureMark({courseId, lectureId, checked}) {
+    const res = await updateLecture({courseId, lectureId, checked})
+    if(res?.error) {
+      return toast.error(res?.error?.data?.message)
+    }
+    if(res?.data?.success) {
+      return toast.success(res?.data?.message)
+    }
   }
 
   return (
@@ -46,6 +71,17 @@ function LectureList({
           >
             <input
               type="checkbox"
+              checked={data?.courseProgress?.lectureProgress.some(
+                (item) => item.lectureId === lecture._id && item.marked
+              )}
+              onChange={(e) => {
+                e.stopPropagation()
+                updateLectureMark({
+                  courseId,
+                  lectureId: lecture._id, 
+                  checked: e.target.checked,
+                })
+              }}
               className="absolute top-[50%] -translate-y-[50%] left-[6px] text-xl"
             />
             <p className="text-xl">

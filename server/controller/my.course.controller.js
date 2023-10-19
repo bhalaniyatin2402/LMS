@@ -10,14 +10,14 @@ import Course from "../models/course.model.js";
  * @ACCESS course purchased user only {{url}}/api/v1/my-courses
  */
 
-export const getMyAllLectures = asyncHandler(async (req, res, next) => {
+export const getMyAllCourses = asyncHandler(async (req, res, next) => {
   const { id } = req.user;
 
   const payment = await Payment.findOne({ userId: id });
   const courses = await Course.find().select("-lectures");
 
   if (!payment) {
-    return next(new AppError(`still! you can't purchase any courses`, 400));
+    return next(new AppError(`still! you can't purchase any courses`, 403));
   }
 
   let listOfCourses = [];
@@ -25,10 +25,15 @@ export const getMyAllLectures = asyncHandler(async (req, res, next) => {
   payment.purchasedCourse.map((item) => {
     courses.map((course) => {
       if (course._id.toString() === item.courseId) {
-        return listOfCourses.push({
-          title: course.title,
-          thumbnail: course.thumbnail.secure_url,
-        });
+        item.purchaseDetails.map(payment => {
+          if(payment.expirationDate > Date.now()) {
+            return listOfCourses.push({
+              _id: course._id,
+              title: course.title,
+              thumbnail: course.thumbnail,
+            });
+          }
+        })
       }
     });
   });
@@ -82,7 +87,8 @@ export const getMyCourseLectureProgress = asyncHandler(
 export const addNote = asyncHandler(async (req, res, next) => {
   const { id } = req.user;
   const { note } = req.body;
-  const { courseId, lectureId } = req.params;
+  const { courseId } = req.params;
+  const { lectureId } = req.query
 
   const myCourse = await MyCourse.findOne({ userId: id });
 
@@ -128,7 +134,8 @@ export const addNote = asyncHandler(async (req, res, next) => {
 export const updateLectureMark = asyncHandler(async (req, res, next) => {
   const { id } = req.user;
   const { checked } = req.body;
-  const { courseId, lectureId } = req.params;
+  const { courseId } = req.params;
+  const { lectureId } = req.query
 
   const myCourse = await MyCourse.findOne({ userId: id });
 
@@ -174,7 +181,8 @@ export const updateLectureMark = asyncHandler(async (req, res, next) => {
 export const deleteNote = asyncHandler(async (req, res, next) => {
   const { id } = req.user;
   const { noteIndex } = req.body;
-  const { courseId, lectureId } = req.params;
+  const { lectureId } = req.query
+  const { courseId } = req.params;
 
   const myCourse = await MyCourse.findOne({ userId: id });
 

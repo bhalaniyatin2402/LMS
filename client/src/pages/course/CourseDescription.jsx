@@ -10,8 +10,8 @@ import { useDeleteCourseMutation } from "../../redux/services/lmsCourseApi";
 import "../../styles/pages/course/CourseDescription.scss";
 
 function CourseDescription() {
-  const role = useOutletContext();
   const navigate = useNavigate();
+  const { role, isPurchased } = useOutletContext();
   const { state } = useLocation();
   const [deleteCourse, { isLoading }] = useDeleteCourseMutation();
 
@@ -45,18 +45,21 @@ function CourseDescription() {
         <div className="content">
           <div className="left">
             <img src={state?.thumbnail?.secure_url} />
-            {/* <button
-              className="btn btn-sm sm:btn-md"
-              onClick={() => navigate(`/course/${state?._id}`)}
-            >
-              Go To Course
-            </button> */}
-            <button
-              className="btn btn-sm sm:btn-md"
-              onClick={() => navigate(`/checkout`, { state })}
-            >
-              Enroll Now
-            </button>
+            {isPurchased ? (
+              <button
+                className="btn btn-sm sm:btn-md"
+                onClick={() => navigate(`/course/${state?._id}`)}
+              >
+                Go To Course
+              </button>
+            ) : (
+              <button
+                className="btn btn-sm sm:btn-md"
+                onClick={() => navigate(`/checkout`, { state })}
+              >
+                Enroll Now
+              </button>
+            )}
           </div>
           <div className="right">
             <p className="desc">{state.description}</p>

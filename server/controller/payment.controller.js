@@ -114,7 +114,6 @@ export const verify = asyncHandler(async (req, res, next) => {
   const course = await Course.findById(courseId).select("-lectures");
   const user = await User.findById(id);
   const myCourse = await MyCourse.findOne({ userId: id });
-  console.log(course);
 
   if (!course || !user) {
     return next(new AppError("user or course does not exist.", 400));

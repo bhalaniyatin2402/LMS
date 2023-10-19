@@ -125,7 +125,6 @@
         position: absolute;
         right: 20px;
         bottom: 10px;
-        // transform: translateX(-50%);
       }
     }
     h3 {
@@ -143,7 +142,6 @@
       h2 {
         font-size: 18px;
         font-weight: 600;
-        // margin-bottom: 7px;
         @include sm {
           font-weight: 500;
           font-size: 20px;

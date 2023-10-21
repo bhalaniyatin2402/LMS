@@ -9,7 +9,7 @@ const app = express();
 const corsOptions = {
   origin: [process.env.FRONT_URL, process.env.FRONT_URL],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true
+  credentials: true,
 };
 
 app.use(express.json());
@@ -23,12 +23,14 @@ import courseRoutes from "./routes/course.route.js";
 import myCourseRoutes from "./routes/my.course.route.js";
 import paymentRoutes from "./routes/payment.route.js";
 import userRoutes from "./routes/user.routes.js";
+import AdminRoutes from "./routes/admin.dashboard.route.js";
 
 // set routes to base url
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/my-course", myCourseRoutes);
+app.use("/api/v1/admin", AdminRoutes);
 
 // page not found
 app.all("*", (req, res) => {

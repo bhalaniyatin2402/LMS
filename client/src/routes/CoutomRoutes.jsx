@@ -6,11 +6,13 @@ import Denied from "../pages/Denied";
 import Error from "../pages/Error";
 import CourseList from "../pages/course/CourseList";
 
-import RequireAuth from "./RequireAuth";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
+
+import RequireAuth from "./RequireAuth";
+import IsCoursePurchased from "./IsCoursePurchased";
 
 import Profile from "../pages/user/Profile.";
 import EditProfile from "../pages/user/EditProfile";
@@ -26,9 +28,9 @@ import CreateCourse from "../pages/course/CreateCourse";
 import UpdateCourse from "../pages/course/UpdateCourse";
 import AddLecture from "../pages/Lecture/AddLecture";
 import UpdateLecture from "../pages/Lecture/UpdateLecture";
+import AdminDashboard from "../pages/admin_dashboard/AdminDashboard";
 
 import PageNotFound from "../pages/PageNotFound";
-import IsCoursePurchased from "./IsCoursePurchased";
 
 function CoutomRoutes() {
   return (
@@ -63,6 +65,7 @@ function CoutomRoutes() {
         <Route path="/course/update" element={<UpdateCourse />} />
         <Route path="/course/lecture/add" element={<AddLecture />} />
         <Route path="/course/lecture/update" element={<UpdateLecture />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Route>
 
       <Route path="*" element={<PageNotFound />} />

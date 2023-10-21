@@ -3,9 +3,10 @@ import { configureStore } from "@reduxjs/toolkit";
 import { lmsAuthApi } from "./services/lmsAuthApi";
 import { lmsCourseApi } from "./services/lmsCourseApi";
 import { lmsPaymentApi } from "./services/lmsPaymentApi";
+import { lmsMyCourseApi } from "./services/lmsMyCourseApi";
+import { lmsAdminApi } from "./services/lmsAdminApi";
 // services reducer
 import authReducer from "./slices/AuthSlice";
-import { lmsMyCourseApi } from "./services/lmsMyCourseApi";
 
 const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ const store = configureStore({
     [lmsCourseApi.reducerPath]: lmsCourseApi.reducer,
     [lmsPaymentApi.reducerPath]: lmsPaymentApi.reducer,
     [lmsMyCourseApi.reducerPath]: lmsMyCourseApi.reducer,
+    [lmsAdminApi.reducerPath]: lmsAdminApi.reducer,
     auth: authReducer,
   },
   devTools: true,
@@ -21,9 +23,9 @@ const store = configureStore({
       lmsAuthApi.middleware,
       lmsCourseApi.middleware,
       lmsPaymentApi.middleware,
-      lmsMyCourseApi.middleware
+      lmsMyCourseApi.middleware,
+      lmsAdminApi.middleware,
     ]),
 });
 
 export default store;
-

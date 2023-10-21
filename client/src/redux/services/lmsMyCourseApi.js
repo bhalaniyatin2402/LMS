@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setHeaders } from "./lmsAuthApi";
 
 export const lmsMyCourseApi = createApi({
+  reducerPath: "lmsMyCourse",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:3000/api/v1/my-course",
     credentials: "include",
@@ -47,5 +48,5 @@ export const {
   useGetLectureProgressQuery,
   useUpdateLectureMarkMutation,
   useAddNoteMutation,
-  useDeleteNoteMutation
+  useDeleteNoteMutation,
 } = lmsMyCourseApi;

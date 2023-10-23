@@ -12,14 +12,15 @@ export const setHeaders = (headers) => {
 export const lmsAuthApi = createApi({
   reducerPath: "lmsAuth",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000/api/v1/user",
+    baseUrl: "http://localhost:3000/api/v1",
     credentials: "include",
     headers: setHeaders(),
   }),
+  tagTypes: ["User", "Course"],
   endpoints: (builder) => ({
     register: builder.mutation({
       query: (data) => ({
-        url: "/register",
+        url: "/user/register",
         method: "POST",
         body: data,
       }),
@@ -28,10 +29,11 @@ export const lmsAuthApi = createApi({
         localStorage.setItem("role", "USER");
         return res;
       },
+      invalidatesTags: ["User"],
     }),
     login: builder.mutation({
       query: (data) => ({
-        url: "/login",
+        url: "/user/login",
         method: "POST",
         body: data,
       }),
@@ -40,52 +42,52 @@ export const lmsAuthApi = createApi({
         localStorage.setItem("role", response?.role);
         return response;
       },
-      invalidatesTags: ['Me']
+      invalidatesTags: ["User"],
     }),
     logout: builder.mutation({
       query: () => ({
-        url: "/logout",
+        url: "/user/logout",
       }),
       transformResponse: (res) => {
         localStorage.clear();
         return res;
       },
-      invalidatesTags: ['Me']
+      invalidatesTags: ["User"],
     }),
     getUserDetail: builder.query({
       query: () => ({
-        url: "/me",
+        url: "/user/me",
       }),
-      providesTags: ["Me"],
+      providesTags: ["User"],
     }),
     forgotPassword: builder.mutation({
       query: (data) => ({
-        url: "/reset",
+        url: "/user/reset",
         method: "POST",
         body: data,
       }),
     }),
     resetPassword: builder.mutation({
       query: ({ resetToken, data }) => ({
-        url: `/reset/${resetToken}`,
+        url: `/user/reset/${resetToken}`,
         method: "POST",
         body: data,
       }),
     }),
     changePassword: builder.mutation({
       query: (data) => ({
-        url: `/change-password`,
+        url: `/user/change-password`,
         method: "POST",
         body: data,
       }),
     }),
     updateProfile: builder.mutation({
       query: (data) => ({
-        url: `/me`,
+        url: `/user/me`,
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: ["Me"],
+      invalidatesTags: ["User"],
     }),
   }),
 });

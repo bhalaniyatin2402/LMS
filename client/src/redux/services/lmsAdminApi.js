@@ -1,19 +1,14 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { setHeaders } from "./lmsAuthApi";
+import { lmsAuthApi } from "./lmsAuthApi";
 
-export const lmsAdminApi = createApi({
-  reducerPath: "lmsAdmin",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000/api/v1/admin",
-    credentials: "include",
-    prepareHeaders: setHeaders(),
-  }),
+export const lmsAdminApi = lmsAuthApi.injectEndpoints({
   endpoints: (build) => ({
     courseSellByUser: build.query({
-      query: () => `/courses-sell-by-user`,
+      query: () => `/admin/courses-sell-by-user`,
+      providesTags: [{ type: "User" }],
     }),
     coursesSellByCourse: build.query({
-      query: () => `/courses-sell-by-course`,
+      query: () => `/admin/courses-sell-by-course`,
+      providesTags: { type: "User" },
     }),
   }),
 });

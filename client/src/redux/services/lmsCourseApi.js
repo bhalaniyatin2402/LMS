@@ -1,76 +1,72 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { setHeaders } from "./lmsAuthApi";
+import { lmsAuthApi } from "./lmsAuthApi";
 
-export const lmsCourseApi = createApi({
-  reducerPath: "lmsCourse",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `http://localhost:3000/api/v1/course`,
-    credentials: "include",
-    headers: setHeaders(),
-  }),
+export const lmsCourseApi = lmsAuthApi.injectEndpoints({
   endpoints: (build) => ({
     getCategoryList: build.query({
-      query: () => `/category`,
+      query: () => `/course/category`,
+      providesTags: [{ type: "Course" }],
     }),
     getInstructorList: build.query({
-      query: () => "/instructor",
+      query: () => "/course/instructor",
+      providesTags: [{ type: "Course" }],
     }),
     getAllCorses: build.mutation({
       query: (data) => ({
-        url: `/`,
+        url: `/course/`,
         params: data,
       }),
-      providesTags: ["Course"],
+      providesTags: [{ type: "Course" }],
     }),
     createCourse: build.mutation({
       query: (data) => ({
-        url: `/`,
+        url: `/course/`,
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Course"],
+      invalidatesTags: [{ type: "Course" }],
     }),
     updateCourse: build.mutation({
       query: ({ courseId, formData }) => ({
-        url: `/?courseId=${courseId}`,
+        url: `/course/?courseId=${courseId}`,
         method: "PUT",
         body: formData,
       }),
-      invalidatesTags: ["Course"],
+      invalidatesTags: [{ type: "Course" }],
     }),
     deleteCourse: build.mutation({
       query: (id) => ({
-        url: `/`,
+        url: `/course/`,
         method: "DELETE",
         params: { courseId: id },
       }),
-      invalidatesTags: ["Course"],
+      invalidatesTags: [{ type: "Course" }],
     }),
     getLectures: build.mutation({
-      query: (courseId) => `/${courseId}`,
+      query: (courseId) => `/course/${courseId}`,
+      invalidatesTags: [{ type: "Course", id: "Lecture" }],
     }),
     addLecture: build.mutation({
       query: ({ courseId, formData }) => ({
-        url: `/${courseId}`,
+        url: `/course/${courseId}`,
         method: "POST",
         body: formData,
       }),
-      invalidatesTags: ["Lecture"],
+      invalidatesTags: [{ type: "Course", id: "Lecture" }],
     }),
     updateLecture: build.mutation({
       query: ({ courseId, lectureId, formData }) => ({
-        url: `/${courseId}?lectureId=${lectureId}`,
+        url: `/course/${courseId}?lectureId=${lectureId}`,
         method: "PUT",
         body: formData,
       }),
-      invalidatesTags: ["Lecture"],
+      invalidatesTags: [{ type: "Course", id: "Lecture" }],
     }),
     removeLecture: build.mutation({
       query: ({ courseId, lectureId }) => ({
-        url: `/${courseId}?lectureId=${lectureId}`,
+        url: `/course/${courseId}?lectureId=${lectureId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Lecture"],
+      invalidatesTags: [{ type: "Course", id: "Lecture" }],
     }),
   }),
 });

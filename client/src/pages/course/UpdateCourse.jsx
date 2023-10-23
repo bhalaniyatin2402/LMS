@@ -47,6 +47,7 @@ function UpdateCourse() {
           toast.error(res?.error?.data?.message);
         }
         if (res?.data?.success) {
+          toast.success(res?.data?.message)
           navigate("/courses");
         }
       },

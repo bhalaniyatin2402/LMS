@@ -1,23 +1,18 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { setHeaders } from "./lmsAuthApi";
+import { lmsAuthApi } from "./lmsAuthApi";
 
-export const lmsPaymentApi = createApi({
-  reducerPath: "lmsPayment",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000/api/v1/payment",
-    credentials: "include",
-    prepareHeaders: setHeaders(),
-  }),
+export const lmsPaymentApi = lmsAuthApi.injectEndpoints({
   endpoints: (build) => ({
     getApiKey: build.query({
-      query: (courseId) => `/getkey?courseId=${courseId}`,
+      query: (courseId) => `/payment/getkey?courseId=${courseId}`,
+      providesTags: [{ type: "User" }],
     }),
     checkout: build.mutation({
       query: (data) => ({
-        url: `/checkout`,
+        url: `/payment/checkout`,
         method: "POST",
         body: data,
       }),
+      invalidatesTags: [{ type: "User" }],
     }),
   }),
 });

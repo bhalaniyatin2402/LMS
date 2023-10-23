@@ -43,7 +43,6 @@ function CourseList() {
         instructor = instructors;
       }
       const res = await getAllCourses({ category, instructor });
-      console.log(res);
     },
   });
 

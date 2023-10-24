@@ -88,7 +88,7 @@ function LectureList({
               <span className="fon font-semibold">{index + 1}.</span>
               <span
                 className={`${
-                  currentLecture === index && "text-purple-950 font-semibold"
+                  currentLecture == index && "text-purple-950 font-semibold"
                 }`}
               >
                 {lecture.name}

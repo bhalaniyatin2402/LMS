@@ -7,7 +7,7 @@ config();
 const app = express();
 
 const corsOptions = {
-  origin: [process.env.FRONT_URL],
+  origin: [process.env.FRONT_URL, process.env.FRONT_URL],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 };
@@ -25,10 +25,6 @@ import paymentRoutes from "./routes/payment.route.js";
 import userRoutes from "./routes/user.routes.js";
 import AdminRoutes from "./routes/admin.dashboard.route.js";
 
-app.get('/', (req, res) => {
-  res.status(200).send('server is running...')
-})
-
 // set routes to base url
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/course", courseRoutes);
@@ -38,8 +34,9 @@ app.use("/api/v1/admin", AdminRoutes);
 
 // page not found
 app.all("*", (req, res) => {
-  console.log('page not found');
-  res.send("opps ! 404 error. page not found");
+  res.status(200).json({
+    message: "opps ! 404 error. page not found"
+  })
 });
 
 // handle error and send resopnse

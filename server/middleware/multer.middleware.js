@@ -4,7 +4,7 @@ import path from "path";
 export const upload = multer({
   dest: "uploads/",
   limits: { fieldSize: 5 * 1024 * 1024 },
-  storage: multer.diskStorage({
+  storage: multer.memoryStorage({
     destination: "uploads/",
     filename: (_req, file, cb) => {
       cb(null, file.originalname);

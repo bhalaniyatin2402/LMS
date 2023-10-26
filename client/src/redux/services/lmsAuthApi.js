@@ -12,13 +12,13 @@ export const setHeaders = (headers) => {
 export const lmsAuthApi = createApi({
   reducerPath: "lmsAuth",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000/api/v1",
+    baseUrl: "https://lms-coursify-api.vercel.app/api/v1",
     credentials: "include",
     headers: setHeaders(),
   }),
   tagTypes: ["User", "Course"],
   endpoints: (builder) => ({
-    register: builder.mutation({
+    register: builder.mutation({    
       query: (data) => ({
         url: "/user/register",
         method: "POST",

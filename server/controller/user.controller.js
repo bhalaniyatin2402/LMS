@@ -23,20 +23,24 @@ export const register = asyncHandler(async (req, res, next) => {
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
+    if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
     return next(new AppError("all fields are required", 400));
   }
 
   if (password.length < 8) {
+    if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
     return next(new AppError("password must be atleast 8 char long", 400));
   }
 
   if (name.length < 3 || name.length > 30) {
+    if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
     return next(new AppError("name must atlesast 5 char and not more than 50"));
   }
 
   const isExistUser = await User.findOne({ email });
 
   if (isExistUser) {
+    if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
     return next(new AppError("please enter another email address", 400));
   }
 
@@ -320,6 +324,7 @@ export const updateProfile = asyncHandler(async (req, res, next) => {
   const user = await User.findById(id);
 
   if (!user) {
+    if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
     return next(new AppError("user not exist on this id", 400));
   }
 

@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-// slice reducer
-import { lmsAuthApi } from "./services/lmsAuthApi";
 // services reducer
+import { lmsAuthApi } from "./services/lmsAuthApi";
+// slice reducer
 import authReducer from "./slices/AuthSlice";
 
 const store = configureStore({
@@ -9,7 +9,7 @@ const store = configureStore({
     [lmsAuthApi.reducerPath]: lmsAuthApi.reducer,
     auth: authReducer,
   },
-  devTools: true,
+  devTools: import.meta.env.VITE_APP_NODE_ENV === "development" ? true : false,
   middleware: (gDM) => gDM().concat(lmsAuthApi.middleware),
 });
 

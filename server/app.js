@@ -7,7 +7,7 @@ config();
 const app = express();
 
 const corsOptions = {
-  origin: [process.env.FRONT_URL, process.env.FRONT_URL],
+  origin: [process.env.FRONT_URL],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 };
@@ -34,6 +34,7 @@ app.use("/api/v1/admin", AdminRoutes);
 
 // page not found
 app.all("*", (req, res) => {
+  console.log('page not found');
   res.send("opps ! 404 error. page not found");
 });
 

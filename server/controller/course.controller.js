@@ -14,11 +14,13 @@ export const createCourse = asyncHandler(async (req, res, next) => {
   const { title, description, createdBy, category, price, expiry } = req.body;
 
   if (!title || !description || !createdBy || !category || !price || !expiry) {
+    if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
     return next(new AppError("all fields are required", 400));
-  }
+}
 
-  const isCourseExist = await Course.findOne({ title });
-  if (isCourseExist) {
+const isCourseExist = await Course.findOne({ title });
+if (isCourseExist) {
+    if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
     return next(new AppError("title is already used in another course", 400));
   }
 
@@ -212,12 +214,14 @@ export const addLectureIntoCourseById = asyncHandler(async (req, res, next) => {
   const { name, description } = req.body;
 
   if (!name || !description || !req.file) {
+    if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
     return next(new AppError("all fields are required", 400));
   }
 
   const course = await Course.findById(courseId);
 
   if (!course) {
+    fs.rmSync(`uploads/${req.file.filename}`)
     return next(new AppError("course not found!", 400));
   }
 
@@ -271,12 +275,14 @@ export const updateLectureIntoCourseById = asyncHandler(
     const { lectureId } = req.query;
 
     if (!courseId || !lectureId) {
+      if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
       return next(new AppError("course id or lecture id is not found", 400));
     }
 
     const course = await Course.findById(courseId);
 
     if (!course) {
+      if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
       return next(new AppError("course not found", 400));
     }
 
@@ -285,6 +291,7 @@ export const updateLectureIntoCourseById = asyncHandler(
     );
 
     if (lectureIndex === -1) {
+      if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
       return next(new AppError("lecture does not exist", 400));
     }
 

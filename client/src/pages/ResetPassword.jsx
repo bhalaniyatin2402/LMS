@@ -1,11 +1,11 @@
 import { useFormik } from "formik";
 import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 import FormInput from "../components/forms/FormInput";
 import FormLayout from "../components/layouts/FormLayout";
 import { resetPasswordSchema } from "../constants/formAuthSchema";
 import { useResetPasswordMutation } from "../redux/services/lmsAuthApi";
-import toast from "react-hot-toast";
 
 function ResetPassword() {
   const resetToken = useParams();

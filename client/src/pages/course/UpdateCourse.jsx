@@ -7,7 +7,7 @@ import FormLayout from "../../components/layouts/FormLayout";
 import FormInput from "../../components/forms/FormInput";
 import { useUpdateCourseMutation } from "../../redux/services/lmsCourseApi";
 import { updateCourseSchema } from "../../constants/formCourseSchema";
-import AddImage from "../../assets/AddImage.png";
+import AddImage from "../../assets/addImage.png";
 import "../../styles/pages/course/CreateCourse.scss";
 
 function UpdateCourse() {

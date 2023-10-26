@@ -1,7 +1,8 @@
 import RazorPay from "razorpay";
 import app from "./app.js";
-import "./config/cloudinary.config.js";
 import connectToDB from "./config/db.config.js";
+
+import "./config/cloudinary.config.js";
 
 const PORT = process.env.PORT || 3000;
 

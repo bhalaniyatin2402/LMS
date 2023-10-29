@@ -8,9 +8,7 @@ import AppError from "../utils/error.utils.js";
 import { forgotPasswordMail, registerMail } from "../utils/mail.utils.js";
 
 const cookieOptions = {
-  maxAge: 7 * 24 * 60 * 60 * 1000,
-  httpOnly: true,
-  secure: true,
+  maxAge: 7 * 24 * 60 * 60 * 1000
 };
 
 /**

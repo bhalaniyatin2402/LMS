@@ -1,14 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
 
-export const setHeaders = (headers) => {
-  const token = Cookies.get("token");
-
-  if (token) {
-    return { Authorization: `Bearer token=${token}` };
-  }
-};
-
 export const lmsAuthApi = createApi({
   reducerPath: "lmsAuth",
   baseQuery: fetchBaseQuery({

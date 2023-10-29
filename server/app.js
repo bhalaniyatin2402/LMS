@@ -34,7 +34,6 @@ app.use("/api/v1/admin", AdminRoutes);
 
 // page not found
 app.all("*", (req, res) => {
-  console.log('page not found');
   res.send("opps ! 404 error. page not found");
 });
 

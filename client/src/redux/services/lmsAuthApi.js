@@ -12,9 +12,8 @@ export const setHeaders = (headers) => {
 export const lmsAuthApi = createApi({
   reducerPath: "lmsAuth",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://lms-coursify-api.vercel.app/api/v1",
-    credentials: "include",
-    headers: setHeaders(),
+    baseUrl: `${import.meta.env.VITE_APP_COURSIFY_API}/api/v1`,
+    credentials: "include"
   }),
   tagTypes: ["User", "Course"],
   endpoints: (builder) => ({

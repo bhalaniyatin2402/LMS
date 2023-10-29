@@ -8,4 +8,5 @@ export default {
     extend: {},
   },
   plugins: [require('daisyui'), require('@tailwindcss/line-clamp')],
+  darkMode: "media"
 }

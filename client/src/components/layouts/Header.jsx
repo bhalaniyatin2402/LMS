@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import Navbar from "./Navbar";
+import Alert from "../ui/Alert";
 
 function Header() {
   const locaton = useLocation();
@@ -15,10 +16,11 @@ function Header() {
 
   return (
     <div className="drawer z-20">
+      <Alert />
       <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col">
         {/* Navbar */}
-        <div className="w-full navbar bg-base-300">
+          <div className="w-full navbar bg-[#e5e6e6]">
           <div className="flex-none lg:hidden">
             <label
               htmlFor="my-drawer-3"
@@ -62,7 +64,7 @@ function Header() {
           className="drawer-overlay"
         ></label>
         {/* nav items shows in drawer in mobile view */}
-        <ul className="menu p-4 w-56 sm:w-80 min-h-full bg-base-200 space-y-2">
+        <ul className="menu p-4 w-56 sm:w-80 min-h-full bg-[#D1D3D5] space-y-2">
           <Navbar />
         </ul>
       </div>

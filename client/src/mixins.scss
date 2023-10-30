@@ -11,6 +11,7 @@
 
 body {
   background-color: #e5e6e6;
+  color: black;
 }
 
 @media screen and (max-width: 768px) {
@@ -29,6 +30,7 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background-color: #888;
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {

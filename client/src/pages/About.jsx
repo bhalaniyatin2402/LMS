@@ -3,7 +3,7 @@ import Carousel from "../components/Carousel";
 
 function About() {
   return (
-    <main className="min-h-[90vh] bg-base-300">
+    <main className="min-h-[90vh] bg-[#e5e6e6]">
       <section className="flex flex-col lg:flex-row">
         <div className="w-[100%] lg:w-1/2 flex p-8 pb-0 sm:p-20 sm:pb-0 justify-center items-center">
           <div className="content">

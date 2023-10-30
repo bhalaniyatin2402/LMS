@@ -3,7 +3,6 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import Cookies from "js-cookie";
 import { BiEdit } from "react-icons/bi";
 
 import FormInput from "../components/forms/FormInput";
@@ -41,7 +40,6 @@ function Register() {
         setPreviewImage("");
         if (response?.error) toast.error(response?.error?.data?.message);
         if (response?.data?.success) {
-          await Cookies.set("token", response?.data?.token);
           toast.success("register successsfullly");
           dispatch(
             setCredentials({

@@ -1,15 +1,29 @@
+import express from "express";
+const app = express();
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import RazorPay from "razorpay";
+import connectToDB from "./config/db.config.js";
 import { config } from "dotenv";
-import express from "express";
 config();
 
-const app = express();
+import "./config/cloudinary.config.js";
+connectToDB();
+
+export const razorpay = new RazorPay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_SECRET,
+});
 
 const corsOptions = {
   origin: [process.env.FRONT_URL, process.env.FRONT_URL],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
+  allowedHeaders: [
+    "Access-Control-Allow-Origin",
+    "Content-Type",
+    "Authorization",
+  ],
 };
 
 app.use(express.json());
@@ -40,4 +54,8 @@ app.all("*", (req, res) => {
 // handle error and send resopnse
 app.use(errorMiddleware);
 
-export default app;
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`server is running on port: ${PORT}`);
+});

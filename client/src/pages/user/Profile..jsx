@@ -39,7 +39,7 @@ function Profile() {
   }
 
   return (
-    <main className="profile bg-base-300">
+    <main className="profile bg-[#e5e6e6]">
       <div className="container">
         <h1 className="title">My Profile</h1>
         <div className="content">

@@ -2,10 +2,11 @@
 
 .form {
   display: flex;
-  justify-content: center;
+  justify-content: center;  
   align-items: center;
+  margin: 20px;
   background-color: #e5e6e6;
-  height: 80vh;
+  min-height: 80vh;
 
   form {
     background-color: white;
@@ -18,7 +19,7 @@
     box-shadow: 0px 0px 4px rgb(0, 38, 255);
 
     .title {
-      font-size: 17px;
+      font-size: 19px;
       text-align: center;
       font-weight: 600;
       letter-spacing: 1px;

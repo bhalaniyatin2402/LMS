@@ -45,7 +45,7 @@ function Checkout() {
       description: `purchasing ${state?.title} course`,
       image: state?.thumbnail?.secure_url,
       order_id: order.id,
-      callback_url: `http://localhost:3000/api/v1/payment/verify?courseId=${state?._id}`,
+      callback_url: `https://coursify-backend-api.onrender.com/api/v1/payment/verify?courseId=${state?._id}`,
       prefill: {
         name: `${user.name}`,
         email: `${user.email}`,

@@ -10,7 +10,7 @@ function FormInput({
   return (
     <>
       <input
-        className={`input input-sm input-info w-[80vw] sm:w-[350px] max-w-md p-2 sm:p-4 mt-5 text-sm sm:text-lg font-medium tracking-widest`}
+        className={`input input-sm input-info bg-white w-[80vw] sm:w-[350px] max-w-md p-2 sm:p-4 mt-5 text-sm sm:text-lg font-medium tracking-widest`}
         id={name}
         name={name}
         type={type || name}

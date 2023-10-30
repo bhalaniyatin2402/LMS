@@ -5,7 +5,7 @@ import Layout from "../components/layouts/Layout";
 
 function Home() {
   return (
-    <Layout className="bg-base-300">
+    <Layout className="bg-[#e5e6e6]">
       <main className="min-h-[85vh] flex flex-col lg:flex-row">
         <section className="w-full lg:w-1/2 py-8 sm:py-20 flex flex-col justify-center sm:p-12">
           <h2 className="text-4xl font-semibold mb-8">
@@ -20,11 +20,9 @@ function Home() {
             <Link to="/courses">
               <button className="btn btn-warning">Explore courses</button>
             </Link>
-            <Link to="/contact">
-              <button className="btn btn-outline btn-warning">
-                Contact Us
-              </button>
-            </Link>
+            <a href="mailto:kano24022@gmail.com" className="underline">
+              <button className="btn btn-outline btn-warning">contact</button>
+            </a>
           </div>
         </section>
         <section className="w-full lg:w-1/2 flex justify-center items-center border p-2">

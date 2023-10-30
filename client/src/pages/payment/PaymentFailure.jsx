@@ -5,8 +5,8 @@ function PaymentFailure() {
   const navigate = useNavigate();
 
   return (
-    <main className="h-[85vh] flex justify-center items-center">
-      <div className="w-[300px] bg-white rounded-lg flex flex-col items-center">
+    <main className="min-h-[85vh] flex justify-center items-center">
+      <div className="w-[300px] my-10 bg-white rounded-lg flex flex-col items-center">
         <h1 className="w-full text-center text-2xl text-error py-2">
           Payment Failed
         </h1>

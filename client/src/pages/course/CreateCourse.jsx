@@ -142,7 +142,7 @@ function CreateCourse() {
           />
           <textarea
             name="description"
-            className="md:w-300 resize-none border border-[#3ABFF8] input-info"
+            className="md:w-300 resize-none bg-white border border-[#3ABFF8] input-info"
             placeholder="Course Description"
             onChange={handleChange}
             value={values.description}

@@ -100,7 +100,7 @@ function LectureNotes({ lectures, courseId, currentLecture }) {
           placeholder="write note"
           value={textNote}
           onChange={(e) => setTextNote(e.target.value)}
-          className="textarea textarea-info textarea-xs w-full max-w-xs resize-none text-[13px] tracking-wider"
+          className="textarea textarea-info bg-white textarea-xs w-full max-w-xs resize-none text-[13px] tracking-wider"
         ></textarea>
         <button
           className={`mt-auto btn btn-sm btn-primary ${

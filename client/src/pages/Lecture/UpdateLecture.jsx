@@ -119,7 +119,7 @@ function UpdateLecture() {
       />
       <textarea
         name="description"
-        className="w-[80vw] sm:w-[350px] h-[70px] resize-none border border-[#3ABFF8] input-info mt-3 rounded-lg px-3 py-1 text-lg tracking-wider"
+        className="w-[80vw] sm:w-[350px] h-[70px] resize-none bg-white border border-[#3ABFF8] input-info mt-3 rounded-lg px-3 py-1 text-lg tracking-wider"
         placeholder="lecture Description"
         onChange={handleChange}
         value={values.description}

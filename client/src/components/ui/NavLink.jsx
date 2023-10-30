@@ -6,7 +6,7 @@ function NavLink({ href, title, className }) {
   return (
     <Link
       to={href}
-      className={`text-lg font-semibold ${
+      className={`text-lg font-semibold hover:text-black hover:bg-[#D1D3D5] ${
         // show active nav link on page changes
         location.pathname === href ? "bg-[#D1D3D5]" : ""
       } ${className}`}

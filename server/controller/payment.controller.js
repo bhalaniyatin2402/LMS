@@ -2,7 +2,7 @@ import Payment from "../models/payment.model.js";
 import User from "../models/user.model.js";
 import Course from "../models/course.model.js";
 import MyCourse from "../models/my.course.model.js";
-import { razorpay } from "../server.js";
+import { razorpay } from "../app.js";
 import crypto from "crypto";
 import asyncHandler from "../middleware/asyncHandler.middleware.js";
 import AppError from "../utils/error.utils.js";

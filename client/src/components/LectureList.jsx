@@ -82,7 +82,7 @@ function LectureList({
                   checked: e.target.checked,
                 })
               }}
-              className="absolute top-[50%] -translate-y-[50%] left-[6px] text-xl"
+              className="absolute top-[50%] text-white -translate-y-[50%] left-[6px] text-xl"
             />
             <p className="text-xl">
               <span className="fon font-semibold">{index + 1}.</span>

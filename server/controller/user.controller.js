@@ -8,7 +8,10 @@ import AppError from "../utils/error.utils.js";
 import { forgotPasswordMail, registerMail } from "../utils/mail.utils.js";
 
 const cookieOptions = {
-  maxAge: 7 * 24 * 60 * 60 * 1000
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+  sameSite: "none",
+  httpOnly: true,
+  secure: true,
 };
 
 /**
@@ -21,24 +24,24 @@ export const register = asyncHandler(async (req, res, next) => {
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
-    if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
+    if (req.file) fs.rmSync(`uploads/${req.file.filename}`);
     return next(new AppError("all fields are required", 400));
   }
 
   if (password.length < 8) {
-    if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
+    if (req.file) fs.rmSync(`uploads/${req.file.filename}`);
     return next(new AppError("password must be atleast 8 char long", 400));
   }
 
   if (name.length < 3 || name.length > 30) {
-    if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
+    if (req.file) fs.rmSync(`uploads/${req.file.filename}`);
     return next(new AppError("name must atlesast 5 char and not more than 50"));
   }
 
   const isExistUser = await User.findOne({ email });
 
   if (isExistUser) {
-    if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
+    if (req.file) fs.rmSync(`uploads/${req.file.filename}`);
     return next(new AppError("please enter another email address", 400));
   }
 
@@ -98,7 +101,6 @@ export const register = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "user registered successfully",
-    token
   });
 });
 
@@ -137,7 +139,6 @@ export const login = asyncHandler(async (req, res, next) => {
     success: true,
     message: "login successfully",
     role: user.role,
-    token,
   });
 });
 
@@ -165,7 +166,7 @@ export const logout = asyncHandler(async (req, res, next) => {
 export const getLoggedInUserDetails = asyncHandler(async (req, res, next) => {
   const { id } = req.user;
 
-  if(!id) {
+  if (!id) {
     return next(new AppError("user not found", 401));
   }
 
@@ -238,12 +239,7 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
   }
 
   if (!password || !confirmPassword) {
-    return next(
-      new AppError(
-        "password and confirm password is required",
-        400
-      )
-    );
+    return next(new AppError("password and confirm password is required", 400));
   }
 
   const forgotPasswordToken = crypto
@@ -287,7 +283,7 @@ export const changePassword = asyncHandler(async (req, res, next) => {
     return next(new AppError("all field are required", 400));
   }
 
-  if(oldPassword == newPassword) {
+  if (oldPassword == newPassword) {
     return next(new AppError("new password match old password", 400));
   }
 
@@ -322,7 +318,7 @@ export const updateProfile = asyncHandler(async (req, res, next) => {
   const user = await User.findById(id);
 
   if (!user) {
-    if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
+    if (req.file) fs.rmSync(`uploads/${req.file.filename}`);
     return next(new AppError("user not exist on this id", 400));
   }
 

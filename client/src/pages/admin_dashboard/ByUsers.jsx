@@ -50,7 +50,7 @@ function ByUsers({ data }) {
 
       <input type="checkbox" id="my_modal_7" className="modal-toggle" />
       <div className="modal">
-        <div className="modal-box">
+        <div className="modal-box bg-white">
           <h3 className="text-lg font-bold">{userInfo.name}</h3>
           <div className="mt-5 flex flex-col justify-center items-center gap-3">
             <img src={userInfo.avatar} className="rounded-full max-w-[200px]" />

@@ -1,13 +1,17 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { IoCheckmarkDoneCircle } from "react-icons/io5";
 
 function PaymentSuccess() {
   const navigate = useNavigate();
   const courseId = useSearchParams()[0].get("courseId");
 
+  if(courseId === null) {
+    return <Navigate to='/courses' />
+  }
+
   return (
-    <main className="h-[85vh] flex justify-center items-center">
-      <div className="w-[300px] bg-white rounded-lg flex flex-col items-center">
+    <main className="min-h-[85vh] flex justify-center items-center">
+      <div className="w-[300px] my-6 bg-white rounded-lg flex flex-col items-center">
         <h1 className="w-full text-center text-2xl text-green-900 py-2">
           Payment Success
         </h1>

@@ -2,7 +2,6 @@ import { useFormik } from "formik";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import Cookies from "js-cookie";
 
 import FormInput from "../components/forms/FormInput";
 import FormLayout from "../components/layouts/FormLayout";
@@ -29,7 +28,6 @@ function Login() {
       actions.resetForm();
       if (response?.error) toast.error(response?.error?.data?.message);
       if (response?.data?.success) {
-        await Cookies.set("token", response?.data?.token);
         toast.success("login succesful");
         dispatch(
           setCredentials({
@@ -69,7 +67,7 @@ function Login() {
           Login
         </button>
       </FormLayout>
-      <div className="flex gap-1 flex-col justify-center items-center bg-base-300">
+      <div className="flex gap-1 flex-col justify-center items-center bg-[#e5e6e6]">
         <Link to="/register" className="link text-blue-950">
           Create New Account
         </Link>

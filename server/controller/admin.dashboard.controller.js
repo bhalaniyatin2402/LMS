@@ -5,6 +5,12 @@ import Payment from "../models/payment.model.js";
 import asyncHandler from "../middleware/asyncHandler.middleware.js";
 import AppError from "../utils/error.utils.js";
 
+/**
+ * @COURSE_SELL_BY_USER
+ * @ROUTE @GET
+ * @ACCESS adimn only {{url}}/api/v1/admin/dashboard
+ */
+
 export const getCoursesSellByUser = asyncHandler(async (req, res, next) => {
   const user = await User.find();
   const payment = await Payment.find();
@@ -52,6 +58,12 @@ export const getCoursesSellByUser = asyncHandler(async (req, res, next) => {
     userCourses,
   });
 });
+
+/**
+ * @COURSE_SELL_BY_COURSE
+ * @ROUTE @GET
+ * @ACCESS adimn only {{url}}/api/v1/admin/dashboard
+ */
 
 export const getCoursesSellByCourse = asyncHandler(async (req, res, next) => {
   const payment = await Payment.find();

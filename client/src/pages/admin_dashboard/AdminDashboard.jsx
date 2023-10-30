@@ -62,7 +62,7 @@ function AdminDashboard() {
       <div className="selling-info">
         <h1>Courses Sell By </h1>
         <div className="course-sell">
-          <div className="tabs tabs-boxed bg-base-300">
+          <div className="tabs tabs-boxed bg-[#e5e6e6]">
             <a
               className={`tab text-xl font-semibold ${
                 tab === "user" && "tab-active"

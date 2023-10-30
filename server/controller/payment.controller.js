@@ -108,7 +108,7 @@ export const verify = asyncHandler(async (req, res, next) => {
     .digest("hex");
 
   if (expectedSignature !== razorpay_signature) {
-    return res.redirect("http://localhost:5173/payment/failure");
+    return res.redirect(`${process.env.FRONT_URL}/payment/failure`);
   }
 
   const course = await Course.findById(courseId).select("-lectures");
@@ -166,7 +166,7 @@ export const verify = asyncHandler(async (req, res, next) => {
     orderId: razorpay_order_id,
     paymentId: razorpay_payment_id,
     coursePrice: course.price,
-    courseLink: `http://localhost:5173/course/${courseId}`,
+    courseLink: `${process.env.FRONT_URL}/course/${courseId}`,
   });
 
   myCourse.myPurchasedCourses.push({
@@ -177,5 +177,5 @@ export const verify = asyncHandler(async (req, res, next) => {
   await payment.save();
   await myCourse.save();
 
-  res.redirect(`http://localhost:5173/payment/success?courseId=${courseId}`);
+  res.redirect(`${process.env.FRONT_URL}/payment/success?courseId=${courseId}`);
 });

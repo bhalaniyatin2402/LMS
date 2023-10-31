@@ -73,6 +73,7 @@
       padding: 10px;
       border-radius: 8px;
       box-shadow: 0px 0px 6px #3abff8;
+      overflow-y: auto;
       width: 80%;
       @include sm {
         width: 70%;
@@ -95,9 +96,6 @@
             font-size: 20px;
           }
         }
-      }
-      .lecture-list-container {
-        height: 425px;
       }
     }
   }

@@ -55,7 +55,7 @@ function ChangePassword() {
         }`}
       >
         {isLoading && <span className="loading loading-spinner"></span>}
-        update profile
+        update password
       </button>
     </FormLayout>
   );

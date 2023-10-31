@@ -1,5 +1,13 @@
 # Learning Management System using MERN stack
 
+### User Credentials for Testing
+- `user one`
+  - `email` : one@gmail.com
+  - `password` : one@1234
+- `user two`
+  - `email` : two@gmail.com
+  - `password` : two@1234
+
 ## Features
 
 - `authentication`
@@ -7,6 +15,7 @@
 - `authoriztion` - protected routes that access by only admin
 - `protected courses` - user access only purchase courses
 - `lecture notes` - user add notes to each lecture
+- `lecture mark` - user can mark viewd lecture
 - `dashboard` - details of users and courses
 
 ## Project Setup

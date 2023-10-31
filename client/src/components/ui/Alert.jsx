@@ -6,7 +6,7 @@ function Alert() {
       {window.addEventListener("load", function () {
         {
           toast.error(
-            `payment is in the test mode. don't fill correct details`
+            `payment is in the test mode. fill dummy details and pay`
           );
         }
       })}

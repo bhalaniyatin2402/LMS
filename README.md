@@ -1,6 +1,7 @@
 # Learning Management System using MERN stack
 
 ### User Credentials for Testing
+#### currently payment gateway of razorpay is going to trouble on razorpay side in test mode so you can test via this users.
 - `user one`
   - `email` : one@gmail.com
   - `password` : one@1234

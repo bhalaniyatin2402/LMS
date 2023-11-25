@@ -2,21 +2,20 @@ import Payment from "../models/payment.model.js";
 import User from "../models/user.model.js";
 import Course from "../models/course.model.js";
 import MyCourse from "../models/my.course.model.js";
-import { razorpay } from "../app.js";
-import crypto from "crypto";
+import { stripe } from "../app.js";
 import asyncHandler from "../middleware/asyncHandler.middleware.js";
 import AppError from "../utils/error.utils.js";
 import { coursePurchasingMail } from "../utils/mail.utils.js";
 
 /**
- * @GET_API_KEY
- * @ROUTR @GET
- * @ACCESS login user only {{url}}/api/v1/getkey?courseId=''
+ * @CHECKOUT
+ * @ROUTR @POST
+ * @ACCESS login user only {{url}}/api/v1/checkout
  */
 
-export const getApiKey = asyncHandler(async (req, res, next) => {
+export const checkout = asyncHandler(async (req, res) => {
+  const { amount, title, courseId } = req.body;
   const { id } = req.user;
-  const { courseId } = req.query;
 
   const payment = await Payment.findOne({ userId: id });
 
@@ -44,50 +43,26 @@ export const getApiKey = asyncHandler(async (req, res, next) => {
     }
   }
 
-  res.status(200).json({
-    success: true,
-    message: "api key",
-    key: process.env.RAZORPAY_KEY_ID,
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    mode: "payment",
+    line_items: [
+      {
+        price_data: {
+          currency: "INR",
+          product_data: {
+            name: title,
+          },
+          unit_amount: amount * 100,
+        },
+        quantity: 1,
+      },
+    ],
+    success_url: `${process.env.FRONT_URL}/payment/success?courseId=${courseId}`,
+    cancel_url: `${process.env.FRONT_URL}/payment/failure`,
   });
-});
 
-/**
- * @CHECKOUT
- * @ROUTR @POST
- * @ACCESS login user only {{url}}/api/v1/checkout
- */
-
-export const checkout = asyncHandler(async (req, res, next) => {
-  const { id } = req.user;
-  const { amount } = req.body;
-
-  const user = await User.findById(id);
-
-  if (!user) {
-    return next(new AppError("user not found", 400));
-  }
-
-  if (user.role === "ADMIN") {
-    return next(new AppError("admin cannot purchase course", 502));
-  }
-
-  if (!amount) {
-    return next(new AppError("amount is required!", 400));
-  }
-
-  const options = {
-    amount: Number(amount * 100),
-    currency: "INR",
-  };
-
-  const order = await razorpay.orders.create(options);
-
-  res.status(200).json({
-    success: true,
-    message: "order created successfuly",
-    user,
-    order,
-  });
+  res.status(200).json({ url: session.url });
 });
 
 /**
@@ -99,17 +74,6 @@ export const checkout = asyncHandler(async (req, res, next) => {
 export const verify = asyncHandler(async (req, res, next) => {
   const { id } = req.user;
   const { courseId } = req.query;
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-    req.body;
-
-  const expectedSignature = crypto
-    .createHmac("sha256", process.env.RAZORPAY_SECRET)
-    .update(`${razorpay_order_id}|${razorpay_payment_id}`)
-    .digest("hex");
-
-  if (expectedSignature !== razorpay_signature) {
-    return res.redirect(`${process.env.FRONT_URL}/payment/failure`);
-  }
 
   const course = await Course.findById(courseId).select("-lectures");
   const user = await User.findById(id);
@@ -131,12 +95,7 @@ export const verify = asyncHandler(async (req, res, next) => {
 
   const details = {
     purchaseDate: Date.now(),
-    expirationDate: Date.now() + course.expiry + 30 * 24 * 60 * 60 * 1000,
-    payment: {
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature,
-    },
+    expirationDate: Date.now() + course.expiry * 30 * 24 * 60 * 60 * 1000,
   };
 
   const courseIndex = payment.purchasedCourse.findIndex(
@@ -163,8 +122,6 @@ export const verify = asyncHandler(async (req, res, next) => {
   coursePurchasingMail(user.email, {
     courseName: course.title,
     courseExpiry: course.expiry,
-    orderId: razorpay_order_id,
-    paymentId: razorpay_payment_id,
     coursePrice: course.price,
     courseLink: `${process.env.FRONT_URL}/course/${courseId}`,
   });
@@ -177,5 +134,5 @@ export const verify = asyncHandler(async (req, res, next) => {
   await payment.save();
   await myCourse.save();
 
-  res.redirect(`${process.env.FRONT_URL}/payment/success?courseId=${courseId}`);
+  res.status(200).json({ success: true });
 });

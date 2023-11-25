@@ -20,27 +20,30 @@ export const getMyAllCourses = asyncHandler(async (req, res, next) => {
     return next(new AppError(`still! you can't purchase any courses`, 403));
   }
 
-  let listOfCourses = [];
+  let listOfCourseIds = [];
+  let listOfMyCourses = []
 
-  payment.purchasedCourse.map((item) => {
-    courses.map((course) => {
-      if (course._id.toString() === item.courseId) {
-        item.purchaseDetails.map(payment => {
-          if(payment.expirationDate > Date.now()) {
-            return listOfCourses.push({
-              _id: course._id,
-              title: course.title,
-              thumbnail: course.thumbnail,
-            });
-          }
-        })
+  payment.purchasedCourse.map(item => {
+    item.purchaseDetails.map(i => {
+      if(i.expirationDate > Date.now()) {
+        listOfCourseIds.push(item.courseId)
       }
-    });
-  });
+    })
+  })
 
+  courses.map(item => {
+    if(listOfCourseIds.includes(item._id.toString())) {
+      listOfMyCourses.push({
+        _id: item._id,
+        title: item.title,
+        thumbnail: item.thumbnail
+      })
+    }
+  })
+  
   res.status(200).json({
     success: true,
-    courseList: listOfCourses,
+    courseList: listOfMyCourses,
   });
 });
 
@@ -54,7 +57,7 @@ export const getMyCourseLectureProgress = asyncHandler(
   async (req, res, next) => {
     const { id } = req.user;
     const { courseId } = req.params;
-
+    
     const mycourse = await MyCourse.findOne({ userId: id });
 
     if (!mycourse) {
@@ -193,12 +196,13 @@ export const deleteNote = asyncHandler(async (req, res, next) => {
   if (courseIndex === -1) {
     return next(new AppError(`you don't have access to this course`, 400));
   }
-
+  
   const lectureIndex = myCourse.myPurchasedCourses[
     courseIndex
   ].lectureProgress.findIndex((item) => item.lectureId === lectureId);
-
+  
   if (lectureIndex === -1) {
+    return next(new AppError(`you don't have access to this course`, 400));
   }
 
   if (

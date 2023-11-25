@@ -1,65 +1,42 @@
-import React from "react";
-import { useLocation, useNavigate, Navigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useLocation, Navigate } from "react-router-dom";
 
-import {
-  useGetApiKeyQuery,
-  useCheckoutMutation,
-} from "../../redux/services/lmsPaymentApi";
-import Loader from "../../components/ui/Loader";
-import toast from "react-hot-toast";
 import "../../styles/pages/Checkout.scss";
 
 function Checkout() {
-  const navigate = useNavigate();
   const { state } = useLocation();
-  const { data: key, isLoading, error } = useGetApiKeyQuery(state?._id);
-  const [checkout, { isLoading: loading }] = useCheckoutMutation();
-
-  if (isLoading) {
-    return <Loader />;
-  }
-
-  if (error) {
-    if (error?.status === 502 && !isLoading) {
-      return <Navigate to={`/course/${state?._id}`} />;
-    }
-    toast.error(error?.data?.message);
-  }
+  const [loading, setLoading] = useState(false);
 
   if (state === null || !state) {
-    navigate(`/courses`);
+    return <Navigate to="/courses" />;
   }
 
   async function handleCheckout() {
-    const res = await checkout({ amount: state?.price });
-    if (res?.error) {
-      return toast.error(res?.error?.data?.message);
-    }
-    const { order, user } = res?.data;
-
-    const options = {
-      key,
-      amount: order.amount,
-      currency: "INR",
-      name: "Coursify",
-      description: `purchasing ${state?.title} course`,
-      image: state?.thumbnail?.secure_url,
-      order_id: order.id,
-      callback_url: `${import.meta.env.VITE_APP_COURSIFY_API}/api/v1/payment/verify?courseId=${state?._id}`,
-      prefill: {
-        name: `${user.name}`,
-        email: `${user.email}`,
-        contact: "9999999999",
+    setLoading(true);
+    fetch(`${import.meta.env.VITE_APP_COURSIFY_API}/api/v1/payment/checkout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-      notes: {
-        address: "Razorpay Corporate Office",
-      },
-      theme: {
-        color: "#3B82F6",
-      },
-    };
-    const razor = new window.Razorpay(options);
-    razor.open();
+      credentials: "include",
+      mode: "cors",
+      body: JSON.stringify({
+        amount: state?.price,
+        title: state?.title,
+        courseId: state?._id,
+      }),
+    })
+      .then((res) => {
+        if (res.ok) return res.json();
+        return res.json().then((json) => Promise.reject(json));
+      })
+      .then(({ url }) => {
+        window.location = url;
+      })
+      .catch((e) => {
+        console.log(e.error);
+      });
+    setLoading(false);
   }
 
   return (

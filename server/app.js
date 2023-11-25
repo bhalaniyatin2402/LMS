@@ -2,7 +2,7 @@ import express from "express";
 const app = express();
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import RazorPay from "razorpay";
+import Stripe from "stripe";
 import connectToDB from "./config/db.config.js";
 import { config } from "dotenv";
 config();
@@ -10,10 +10,7 @@ config();
 import "./config/cloudinary.config.js";
 connectToDB();
 
-export const razorpay = new RazorPay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_SECRET,
-});
+export const stripe = Stripe(process.env.STRIPE_SECRET);
 
 const corsOptions = {
   origin: [process.env.FRONT_URL, process.env.FRONT_URL],

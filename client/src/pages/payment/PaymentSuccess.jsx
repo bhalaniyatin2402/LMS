@@ -1,12 +1,15 @@
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { IoCheckmarkDoneCircle } from "react-icons/io5";
 
+import { useVerifyQuery } from "../../redux/services/lmsPaymentApi";
+
 function PaymentSuccess() {
   const navigate = useNavigate();
   const courseId = useSearchParams()[0].get("courseId");
+  const result = useVerifyQuery(courseId);
 
-  if(courseId === null) {
-    return <Navigate to='/courses' />
+  if (courseId === null) {
+    return <Navigate to="/courses" />;
   }
 
   return (

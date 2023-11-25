@@ -397,7 +397,7 @@ export const getCategoryList = asyncHandler(async (req, res, next) => {
   }
 
   const courseList = [];
-  courses.map((c, i, courses) => {
+  courses.map((c) => {
     if (!courseList.includes(c.category)) {
       return courseList.push(c.category);
     }
@@ -421,7 +421,7 @@ export const getInstructorList = asyncHandler(async (req, res, next) => {
   }
 
   const instructorList = [];
-  courses.map((c, i, courses) => {
+  courses.map((c) => {
     if (!instructorList.includes(c.createdBy)) {
       return instructorList.push(c.createdBy);
     }

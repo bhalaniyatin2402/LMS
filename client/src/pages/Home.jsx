@@ -2,17 +2,8 @@ import { Link } from "react-router-dom";
 
 import HomePageImage from "../assets/homePageMainImage.png";
 import Layout from "../components/layouts/Layout";
-import { useGetAllCorsesMutation } from "../redux/services/lmsCourseApi";
 
 function Home() {
-  const [getAllCourses] = useGetAllCorsesMutation()
-
-  window.addEventListener('load', async () => {
-    const response = await getAllCourses()
-    console.log(response);
-    console.log('document loaded');
-  })
-
   return (
     <Layout className="bg-[#e5e6e6]">
       <main className="min-h-[85vh] flex flex-col lg:flex-row">

@@ -2,10 +2,6 @@ import { lmsAuthApi } from "./lmsAuthApi";
 
 export const lmsPaymentApi = lmsAuthApi.injectEndpoints({
   endpoints: (build) => ({
-    getApiKey: build.query({
-      query: (courseId) => `/payment/getkey?courseId=${courseId}`,
-      providesTags: [{ type: "User" }],
-    }),
     checkout: build.mutation({
       query: (data) => ({
         url: `/payment/checkout`,
@@ -14,7 +10,10 @@ export const lmsPaymentApi = lmsAuthApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: "User" }],
     }),
+    verify: build.query({
+      query: (data) => `/payment/verify?courseId=${data}`,
+    }),
   }),
 });
 
-export const { useGetApiKeyQuery, useCheckoutMutation } = lmsPaymentApi;
+export const { useCheckoutMutation, useVerifyQuery } = lmsPaymentApi;

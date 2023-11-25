@@ -38,9 +38,9 @@ export const register = asyncHandler(async (req, res, next) => {
     return next(new AppError("name must atlesast 5 char and not more than 50"));
   }
 
-  const isExistUser = await User.findOne({ email });
+  const isUserExist = await User.findOne({ email });
 
-  if (isExistUser) {
+  if (isUserExist) {
     if (req.file) fs.rmSync(`uploads/${req.file.filename}`);
     return next(new AppError("please enter another email address", 400));
   }
@@ -232,14 +232,14 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
   const { password, confirmPassword } = req.body;
   const { resetToken } = req.params;
 
+  if (!password || !confirmPassword) {
+    return next(new AppError("password and confirm password is required", 400));
+  }
+
   if (password !== confirmPassword) {
     return next(
       new AppError("password and confirm password are not match", 400)
     );
-  }
-
-  if (!password || !confirmPassword) {
-    return next(new AppError("password and confirm password is required", 400));
   }
 
   const forgotPasswordToken = crypto

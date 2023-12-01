@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import { useGetMyCourseListQuery } from "../../redux/services/lmsMyCourseApi";
 import CourseCard from "../../components/ui/CourseCard";
 import Loader from "../../components/ui/Loader";
@@ -7,6 +9,7 @@ import "../../styles/pages/course/CourseList.scss";
 
 function MyCourses() {
   const { data, isLoading, error } = useGetMyCourseListQuery()
+  const { t } = useTranslation()
 
   if (isLoading) {
     return <Loader />;
@@ -26,7 +29,7 @@ function MyCourses() {
   return (
     <>
       <main className="courses-page">
-        <h1>My Courses</h1>
+        <h1>{t('My Courses')}</h1>
         <div className="course-list">
           {data?.courseList?.length !== 0 ? (
             data?.courseList?.map((course) => (
@@ -34,7 +37,7 @@ function MyCourses() {
             ))
           ) : (
             <div className="">
-              you Didn't purchase any course
+              {t("you Didn't purchase any course")}
             </div>
           )}
         </div>

@@ -1,5 +1,6 @@
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useGetLecturesMutation } from "../../redux/services/lmsCourseApi";
 import Denied from "../Denied";
@@ -15,6 +16,7 @@ function DisplayLectures() {
   const role = useOutletContext();
   const [currentLecture, setCurrentLecture] = useState(0);
   const [tab, setTab] = useState("overview");
+  const { t } = useTranslation()
   const [getLecture, { isLoading, data, error }] =
     useGetLecturesMutation(courseId);
 
@@ -39,7 +41,7 @@ function DisplayLectures() {
   if (data?.lectures.length === 0) {
     return (
       <div className="h-[80vh] flex justify-center items-center text-3xl flex-col">
-        No Lecture Exist
+        {t('No Lecture Exist')}
         {role && role === "ADMIN" && (
           <button
             className="btn btn-sm btn-primary mt-3"
@@ -48,7 +50,7 @@ function DisplayLectures() {
               navigate("/course/lecture/add", { state: courseId });
             }}
           >
-            Add Lecture
+            {t('Add Lecture')}
           </button>
         )}
       </div>
@@ -74,7 +76,7 @@ function DisplayLectures() {
                 tab === "overview" && "tab-active"
               }`}
             >
-              overview
+              {t('overview')}
             </a>
             {role !== "ADMIN" && (
               <a
@@ -83,7 +85,7 @@ function DisplayLectures() {
                   tab === "notes" && "tab-active"
                 }`}
               >
-                Notes
+                {t('Notes')}
               </a>
             )}
           </div>
@@ -108,7 +110,7 @@ function DisplayLectures() {
         {/* lecture list of the course */}
         <div className="right">
           <div className="header">
-            <h2>Lecture List</h2>
+            <h2>{t('Lecture List')}</h2>
             {role && role === "ADMIN" && (
               <button
                 className="btn btn-sm btn-primary"
@@ -117,7 +119,7 @@ function DisplayLectures() {
                   navigate("/course/lecture/add", { state: courseId });
                 }}
               >
-                + Add
+                + {t('add')}
               </button>
             )}
           </div>

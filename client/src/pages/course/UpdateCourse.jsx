@@ -1,6 +1,7 @@
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 
 import FormLayout from "../../components/layouts/FormLayout";
@@ -15,6 +16,7 @@ function UpdateCourse() {
   const { state } = useLocation();
   const [previewImage, setPreviewImage] = useState(state?.thumbnail?.secure_url);
   const [updateCourse, { isLoading }] = useUpdateCourseMutation();
+  const { t } = useTranslation()
 
   const { values, touched, errors, handleSubmit, handleChange, setFieldValue } =
     useFormik({
@@ -24,7 +26,7 @@ function UpdateCourse() {
         category: state?.category,
         createdBy: state?.createdBy,
         price: state?.price,
-        expiry: state?.expiry,
+        expiry: '', 
         thumbnail: "",
       },
       validationSchema: updateCourseSchema,
@@ -95,7 +97,7 @@ function UpdateCourse() {
             />
             {touched.thumbnail && errors.thumbnail ? (
               <span className="text-sm mr-auto text-red-900 w-auto sm:w-[270px]">
-                {errors.thumbnail}
+                {t(`${errors.thumbnail}`)}
               </span>
             ) : null}
           </label>
@@ -149,13 +151,13 @@ function UpdateCourse() {
           <textarea
             name="description"
             className="md:w-300 resize-none bg-white border border-[#3ABFF8] input-info"
-            placeholder="Course Description"
+            placeholder={t("Course Description")}
             onChange={handleChange}
             value={values.description}
           ></textarea>
           {touched.description && errors.description ? (
             <span className="text-sm mr-auto text-red-900 w-auto sm:w-[270px]">
-              {errors.description}
+              {t(`${errors.description}`)}
             </span>
           ) : null}
         </div>
@@ -167,7 +169,7 @@ function UpdateCourse() {
         }`}
       >
         {isLoading && <span className="loading loading-spinner"></span>}
-        update course
+        {t('Update Course')}
       </button>
     </FormLayout>
   );

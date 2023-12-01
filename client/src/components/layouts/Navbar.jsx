@@ -1,4 +1,7 @@
 import { useSelector } from "react-redux";
+import { IoLanguage } from "react-icons/io5";
+import { changeLanguage } from "i18next";
+
 import NavLink from "../ui/NavLink";
 
 function Navbar() {
@@ -9,7 +12,7 @@ function Navbar() {
     <>
       {isLoggedIn && role === "ADMIN" && (
         <li>
-          <NavLink href="/admin/dashboard" title="Admin Dashbord" />
+          <NavLink href="/admin/dashboard" title="Admin Dashboard" />
         </li>
       )}
       <li>
@@ -40,6 +43,24 @@ function Navbar() {
           />
         </li>
       )}
+      <li className="a my-auto">
+        <details>
+          <summary>
+            <IoLanguage className="text-xl" />
+          </summary>
+          <ul className="bg-base-200 rounded-lg">
+            <li onClick={() => changeLanguage("en")}>
+              <a className="mx-auto">English</a>
+            </li>
+            <li onClick={() => changeLanguage("guj")}>
+              <a className="mx-auto">ગુજરાતી</a>
+            </li>
+            <li onClick={() => changeLanguage("hn")}>
+              <a className="mx-auto">हिन्दी</a>
+            </li>
+          </ul>
+        </details>
+      </li>
     </>
   );
 }

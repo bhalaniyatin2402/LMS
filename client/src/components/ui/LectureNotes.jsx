@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { MdDelete } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 import { useGetLectureProgressQuery } from "../../redux/services/lmsMyCourseApi";
 import {
@@ -9,6 +10,7 @@ import {
 } from "../../redux/services/lmsMyCourseApi";
 
 function LectureNotes({ lectures, courseId, currentLecture }) {
+  const { t } = useTranslation()
   const [textNote, setTextNote] = useState("");
   const { data, isLoading, error } = useGetLectureProgressQuery(courseId);
   const [addNote, { isLoading: addNoteLoading, error: addNoteError }] =
@@ -60,7 +62,7 @@ function LectureNotes({ lectures, courseId, currentLecture }) {
     <div className="relative h-[165px]">
       <div className="h-[60%] overflow-auto">
         {!lectureIds.includes(lectures[currentLecture]._id) && (
-          <span className="text-md opacity-60">Add some notes...</span>
+          <span className="text-md opacity-60">{t('Add some notes')}...</span>
         )}
         {data?.courseProgress?.lectureProgress?.map((l) => {
           if (lectures[currentLecture]._id === l.lectureId) {
@@ -88,7 +90,7 @@ function LectureNotes({ lectures, courseId, currentLecture }) {
             } else {
               return (
                 <span className="text-md opacity-60" key={l.lectureId}>
-                  Add some notes...
+                  {t('Add some notes')}...
                 </span>
               );
             }
@@ -97,7 +99,7 @@ function LectureNotes({ lectures, courseId, currentLecture }) {
       </div>
       <div className="absolute bottom-0 left-0 w-full hidden sm:flex justify-center mt-auto gap-4">
         <textarea
-          placeholder="write note"
+          placeholder={`${t('write note')}`}
           value={textNote}
           onChange={(e) => setTextNote(e.target.value)}
           className="textarea textarea-info bg-white textarea-xs w-full max-w-xs resize-none text-[13px] tracking-wider"
@@ -108,7 +110,7 @@ function LectureNotes({ lectures, courseId, currentLecture }) {
           }`}
           onClick={() => addNoteToLecture()}
         >
-          Save
+          {t('save')}
         </button>
       </div>
     </div>

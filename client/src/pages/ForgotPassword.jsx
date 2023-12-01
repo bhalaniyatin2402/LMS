@@ -1,6 +1,7 @@
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import FormLayout from "../components/layouts/FormLayout";
 import { useForgotPasswordMutation } from "../redux/services/lmsAuthApi";
@@ -9,11 +10,12 @@ import FormInput from "../components/forms/FormInput";
 function ForgotPassword() {
   const navigate = useNavigate();
   const [forgotpassword, { isLoading }] = useForgotPasswordMutation();
+  const { t } = useTranslation()
 
   const { touched, values, errors, handleSubmit, handleChange } = useFormik({
     initialValues: {
       email: "",
-    },
+    },  
     onSubmit: async (values) => {
       const res = await forgotpassword({ email: values.email });
       if (res?.data?.success) {
@@ -42,7 +44,7 @@ function ForgotPassword() {
           }`}
         >
           {isLoading && <span className="loading loading-spinner"></span>}
-          forgot password
+          {t('Forgot Password')}
         </button>
       </FormLayout>
     </>

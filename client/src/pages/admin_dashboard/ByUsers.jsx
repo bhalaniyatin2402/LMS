@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { month } from "../../constants/data";
 
 function ByUsers({ data }) {
+  const { t } = useTranslation()
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
@@ -14,9 +16,9 @@ function ByUsers({ data }) {
       <div className="">
         <ul>
           <li className="text-md sm:text-xl md:text-2xl tracking-wider font-semibold py-2 border border-b-black">
-            <p className="w-[15%] text-center">Sr. No.</p>
-            <p className="w-[40%] text-center">Name</p>
-            <p className="w-[30%] text-center">No of Courses</p>
+            <p className="w-[15%] text-center">{t('Sr. No.')}</p>
+            <p className="w-[40%] text-center">{t('name')}</p>
+            <p className="w-[30%] text-center">{t('No of Courses')}</p>
           </li>
           {data?.map((user, i) => (
             <label htmlFor="my_modal_7" key={user.userId}>
@@ -57,7 +59,7 @@ function ByUsers({ data }) {
             <p className="text-lg font-medium">{userInfo.email}</p>
             <div className="flex flex-col justify-center items-center">
               <h2 className="text-xl sm:text-2xl text-center font-semibold">
-                Purchased Courses
+                {t('Purchased Courses')}
               </h2>
               {userInfo?.totalCourses?.length === 0 && "no course purchased"}
               {userInfo?.totalCourses?.map((item, i) => (
@@ -79,7 +81,7 @@ function ByUsers({ data }) {
         </div>
 
         <label className="modal-backdrop" htmlFor="my_modal_7">
-          Close
+          {t('Close')}
         </label>
       </div>
     </>

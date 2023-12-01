@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
+import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 
 import { useRemoveLectureMutation } from "../redux/services/lmsCourseApi";
@@ -20,6 +21,7 @@ function LectureList({
   const navigate = useNavigate();
   const [removeLectureId, setRemoveLectureId] = useState("");
   const [removeLecture, { isLoading }] = useRemoveLectureMutation();
+  const { t } = useTranslation()
   const {
     data,
     isLoading: markLoading,
@@ -34,7 +36,7 @@ function LectureList({
       if (res?.error?.status === 403) {
         return toast.error("access denied to remove lecture");
       }
-      toast.error(res?.error?.data?.message); 
+      toast.error(res?.error?.data?.message);
     }
     if (res?.data?.success) {
       toast.success("lecture removed successfully");
@@ -47,13 +49,13 @@ function LectureList({
     return;
   }
 
-  async function updateLectureMark({courseId, lectureId, checked}) {
-    const res = await updateLecture({courseId, lectureId, checked})
-    if(res?.error) {
-      return toast.error(res?.error?.data?.message)
+  async function updateLectureMark({ courseId, lectureId, checked }) {
+    const res = await updateLecture({ courseId, lectureId, checked });
+    if (res?.error) {
+      return toast.error(res?.error?.data?.message);
     }
-    if(res?.data?.success) {
-      return toast.success(res?.data?.message)
+    if (res?.data?.success) {
+      return toast.success(res?.data?.message);
     }
   }
 
@@ -69,21 +71,23 @@ function LectureList({
             }}
             key={index}
           >
-            <input
-              type="checkbox"
-              checked={data?.courseProgress?.lectureProgress.some(
-                (item) => item.lectureId === lecture._id && item.marked
-              )}
-              onChange={(e) => {
-                e.stopPropagation()
-                updateLectureMark({
-                  courseId,
-                  lectureId: lecture._id, 
-                  checked: e.target.checked,
-                })
-              }}
-              className="absolute top-[50%] text-white -translate-y-[50%] left-[6px] text-xl"
-            />
+            {role !== "ADMIN" && (
+              <input
+                type="checkbox"
+                checked={data?.courseProgress?.lectureProgress.some(
+                  (item) => item.lectureId === lecture._id && item.marked
+                )}
+                onChange={(e) => {
+                  e.stopPropagation();
+                  updateLectureMark({
+                    courseId,
+                    lectureId: lecture._id,
+                    checked: e.target.checked,
+                  });
+                }}
+                className="absolute top-[50%] text-white -translate-y-[50%] left-[6px] text-xl"
+              />
+            )}
             <p className="text-xl">
               <span className="fon font-semibold">{index + 1}.</span>
               <span
@@ -110,7 +114,7 @@ function LectureList({
                   {isLoading && removeLectureId === lecture._id && (
                     <span className="loading loading-spinner"></span>
                   )}
-                  Remove Lecture
+                  {t('Remove Lecture')}
                 </button>
                 <div
                   className="absolute top-4 right-5 cursor-pointer border border-black rounded p-[2px]"

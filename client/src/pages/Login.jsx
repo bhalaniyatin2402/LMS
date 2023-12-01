@@ -2,6 +2,7 @@ import { useFormik } from "formik";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 import FormInput from "../components/forms/FormInput";
 import FormLayout from "../components/layouts/FormLayout";
@@ -13,6 +14,7 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
+  const { t } = useTranslation();
 
   const { values, touched, errors, handleSubmit, handleChange } = useFormik({
     initialValues: {
@@ -64,15 +66,15 @@ function Login() {
           }`}
         >
           {isLoading && <span className="loading loading-spinner"></span>}
-          Login
+          {t("Login")}
         </button>
       </FormLayout>
       <div className="flex gap-1 flex-col justify-center items-center bg-[#e5e6e6]">
         <Link to="/register" className="link text-blue-950">
-          Create New Account
+          {t("Create New Account")}
         </Link>
         <Link to="/forgot/password" className="link text-blue-950 mb-[10px]">
-          forgot password?
+          {t("Forgot Password")}?
         </Link>
       </div>
     </>

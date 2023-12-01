@@ -1,15 +1,18 @@
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function ByCourses({ data }) {
   const navigate = useNavigate();
+  const { t } = useTranslation()
+
   return (
     <div className="">
       <div className="">
         <ul>
           <li className="text-md sm:text-xl md:text-2xl tracking-wider font-semibold py-2 border border-b-black">
-            <p className="w-[15%] text-center">Sr. No.</p>
-            <p className="w-[60%] text-center">Title</p>
-            <p className="w-[20%] text-center">Total sell</p>
+            <p className="w-[15%] text-center">{t('Sr. No.')}</p>
+            <p className="w-[60%] text-center">{t('Title')}</p>
+            <p className="w-[20%] text-center">{t('Total sell')}</p>
           </li>
           {data?.course?.map((course, i) => (
             <label htmlFor="my_modal_7" key={course._id}>

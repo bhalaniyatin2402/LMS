@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFormik } from "formik";
 import { FcFilledFilter } from "react-icons/fc";
+import { useTranslation } from "react-i18next";
 
 import {
   useGetAllCorsesMutation,
@@ -27,6 +28,7 @@ function CourseList() {
     error: instructorError,
   } = useGetInstructorListQuery();
   const [getAllCourses, { data, isLoading, error }] = useGetAllCorsesMutation();
+  const { t } = useTranslation()
 
   const { values, handleSubmit, setFieldValue } = useFormik({
     initialValues: {
@@ -42,7 +44,7 @@ function CourseList() {
       if (instructor.length === 0) {
         instructor = instructors;
       }
-      const res = await getAllCourses({ category, instructor });
+      await getAllCourses({ category, instructor });
     },
   });
 
@@ -61,13 +63,13 @@ function CourseList() {
   return (
     <>
       <main className="courses-page">
-        <h1>Explore Courses</h1>
+        <h1>{t('Explore Courses')}</h1>
         <div
           className="filter-icon"
           onClick={() => document.getElementById("my_modal_1").showModal()}
         >
           <FcFilledFilter />
-          <span>Filter</span>
+          <span>{t('Filter')}</span>
         </div>
         <div className="course-list">
           {data?.courses.length !== 0 ? (

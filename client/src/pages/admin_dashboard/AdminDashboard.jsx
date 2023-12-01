@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import Loader from "../../components/ui/Loader";
 import {
@@ -13,6 +14,7 @@ import "../../styles/pages/AdminDashboard.scss";
 function AdminDashboard() {
   const navigate = useNavigate()
   const [tab, setTab] = useState("user");
+  const { t } =  useTranslation()
 
   const {
     data: userData,
@@ -32,7 +34,7 @@ function AdminDashboard() {
   let revenue = 0;
   courseData?.course?.map((c) => {
     revenue += c?.price * c?.purchasedCourseByUser;
-  });
+  }); 
 
   return (
     <main className="admin">
@@ -41,26 +43,26 @@ function AdminDashboard() {
           className="btn btn-sm btn-success font-bold text-lg"
           onClick={() => navigate('/course/create')}
         >
-          Course ++
+          {t('Course')} ++
         </button>
       </div>
       <div className="info">
         <div className="register-user">
-          Registered Users:
+          {t('Registered Users')}:
           <span>{userData?.totalUsers}</span>
         </div>
         <div className="total-course">
-          Total Courses:
+          {t('Total Courses')}:
           <span>{courseData?.totalCourses}</span>
         </div>
         <div className="revenue">
-          Total Revenue:
+          {t('Total Revenue')}:
           <span>{revenue}₹</span>
         </div>
       </div>
 
       <div className="selling-info">
-        <h1>Courses Sell By </h1>
+        <h1>{t('Courses Sell By')} </h1>
         <div className="course-sell">
           <div className="tabs tabs-boxed bg-[#e5e6e6]">
             <a
@@ -69,7 +71,7 @@ function AdminDashboard() {
               }`}
               onClick={() => setTab("user")}
             >
-              Users
+              {t('Users')}
             </a>
             <a
               className={`tab text-xl font-semibold ${
@@ -77,7 +79,7 @@ function AdminDashboard() {
               }`}
               onClick={() => setTab("course")}
             >
-              Courses
+              {t('Courses')}
             </a>
           </div>
         </div>

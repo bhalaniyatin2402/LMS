@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { FaWindowClose } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 
 import FormLayout from "../../components/layouts/FormLayout";
@@ -14,6 +15,7 @@ function UpdateLecture() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [updateLecture, { isLoading }] = useUpdateLectureMutation();
+  const { t } = useTranslation()
   const [previewVideo, setPreviewVideo] = useState(
     state?.lecture?.lecture?.secure_url
   );
@@ -68,7 +70,7 @@ function UpdateLecture() {
   }
 
   return (
-    <FormLayout title="Update Lecture" onSubmit={handleSubmit} classname="my-6">
+    <FormLayout title="Update Lecture" onSubmit={handleSubmit} classname="my-6">  
       <div className="video w-[70%] h-[140px] sm:h-[180px] relative">
         {previewVideo ? (
           <>
@@ -105,7 +107,7 @@ function UpdateLecture() {
       </div>
       {errors.lecture ? (
         <span className="text-sm mr-auto text-red-900 w-auto sm:w-[270px]">
-          {errors.lecture}
+          {t(`${errors.lecture}`)}
         </span>
       ) : null}
       <FormInput
@@ -120,13 +122,13 @@ function UpdateLecture() {
       <textarea
         name="description"
         className="w-[80vw] sm:w-[350px] h-[70px] resize-none bg-white border border-[#3ABFF8] input-info mt-3 rounded-lg px-3 py-1 text-lg tracking-wider"
-        placeholder="lecture Description"
+        placeholder={t("lecture Description")}
         onChange={handleChange}
         value={values.description}
       ></textarea>
       {touched.description && errors.description ? (
         <span className="text-sm mr-auto text-red-900 w-auto sm:w-[270px]">
-          {errors.description}
+          {t(`${errors.description}`)}
         </span>
       ) : null}
       <button
@@ -136,7 +138,7 @@ function UpdateLecture() {
         }`}
       >
         {isLoading && <span className="loading loading-spinner"></span>}
-        update lecture
+        {t('Update Lecture')}
       </button>
     </FormLayout>
   );

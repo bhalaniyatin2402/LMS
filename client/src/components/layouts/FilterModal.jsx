@@ -1,19 +1,22 @@
 import { BsFilter } from "react-icons/bs";
+import { useTranslation } from "react-i18next";
 
 function FilterModal({ onSubmit, children, setShow }) {
+  const { t } = useTranslation()
+
   return (
     <dialog id="my_modal_1" className="modal">
       <div className="modal-box">
         <h3 className="font-bold text-lg">
           <BsFilter />
-          Filter
+          {t('Filter')}
         </h3>
 
         <form onSubmit={onSubmit}>
           {children}
 
           <button type="submit" className="btn btn-info btn-sm">
-            Apply
+            {t('Apply')}
           </button>
         </form>
 

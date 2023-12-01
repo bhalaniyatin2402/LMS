@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { FaWindowClose } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 
 import FormLayout from "../../components/layouts/FormLayout";
@@ -15,6 +16,7 @@ function AddLecture() {
   const { state: courseId } = useLocation();
   const [addLecture, { isLoading }] = useAddLectureMutation();
   const [previewVideo, setPreviewVideo] = useState();
+  const { t } = useTranslation()
 
   const { values, errors, touched, handleSubmit, handleChange, setFieldValue } =
     useFormik({
@@ -98,7 +100,7 @@ function AddLecture() {
       </div>
       {errors.lecture ? (
         <span className="text-sm mr-auto text-red-900 w-auto sm:w-[270px]">
-          {errors.lecture}
+          {t(`${errors.lecture}`)}
         </span>
       ) : null}
       <FormInput
@@ -113,14 +115,14 @@ function AddLecture() {
       <textarea
         name="description"
         className="w-[80vw] sm:w-[350px] h-[70px] resize-none bg-white border border-[#3ABFF8] input-info mt-3 rounded-lg px-3 py-1 text-lg tracking-wider"
-        placeholder="lecture Description"
+        placeholder={t("lecture Description")}
         onChange={handleChange}
         value={values.description}
       ></textarea>
       {touched.description && errors.description ? (
         <span className="text-sm mr-auto text-red-900 w-auto sm:w-[270px]">
-          {errors.description}
-        </span>
+          {t(`${errors.description}`)}
+        </span> 
       ) : null}
       <button
         type="submit"
@@ -129,7 +131,7 @@ function AddLecture() {
         }`}
       >
         {isLoading && <span className="loading loading-spinner"></span>}
-        add lecture
+        {t('Add Lecture')}
       </button>
     </FormLayout>
   );

@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function Error() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <main className="h-[90vh] relative flex flex-col justify-center items-center bg-[#e5e6e6]">
@@ -16,7 +18,7 @@ function Error() {
           className="btn btn-outline btn-warning mt-7"
           onClick={() => navigate(-1)}
         >
-          Go Back
+          {t("Go Back")}
         </button>
       </div>
     </main>

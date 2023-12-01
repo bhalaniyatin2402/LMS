@@ -5,6 +5,7 @@ import {
   useOutletContext,
 } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 import { useDeleteCourseMutation } from "../../redux/services/lmsCourseApi";
 import "../../styles/pages/course/CourseDescription.scss";
@@ -14,6 +15,7 @@ function CourseDescription() {
   const { role, isPurchased } = useOutletContext();
   const { state } = useLocation();
   const [deleteCourse, { isLoading }] = useDeleteCourseMutation();
+  const { t } = useTranslation();
 
   if (!state) {
     return <Navigate to="/courses" />;
@@ -50,14 +52,14 @@ function CourseDescription() {
                 className="btn btn-sm sm:btn-md"
                 onClick={() => navigate(`/course/${state?._id}`)}
               >
-                Go To Course
+                {t("Go To Course")}
               </button>
             ) : (
               <button
                 className="btn btn-sm sm:btn-md"
                 onClick={() => navigate(`/checkout`, { state })}
               >
-                Enroll Now
+                {t("Enroll Now")}
               </button>
             )}
           </div>
@@ -65,16 +67,16 @@ function CourseDescription() {
             <p className="desc">{state.description}</p>
             <p className="price">{state.price}₹</p>
             <p className="field">
-              category:
-              <span>{state.category}</span>
+              {t("category")}:<span>{state.category}</span>
             </p>
             <p className="field">
-              instructor:
-              <span>{state.createdBy}</span>
+              {t("instructor")}:<span>{state.createdBy}</span>
             </p>
             <p className="field">
-              course Access:
-              <span>{state.expiry} Months</span>
+              {t("course access")}:
+              <span>
+                {state.expiry} {t("months")}
+              </span>
             </p>
           </div>
         </div>
@@ -84,13 +86,13 @@ function CourseDescription() {
               className={`btn btn-sm btn-warning mr-3 `}
               onClick={() => navigate(`/course/update`, { state })}
             >
-              EDIT
+              {t("edit")}
             </button>
             <button
               className={`btn btn-sm btn-error ${isLoading && "btn-disabled"}`}
               onClick={(e) => handleDeleteCourse(e)}
             >
-              DELETE
+              {t("delete")}
             </button>
           </div>
         )}

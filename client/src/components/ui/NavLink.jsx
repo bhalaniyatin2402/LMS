@@ -1,7 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function NavLink({ href, title, className }) {
   const location = useLocation();
+  const { t } = useTranslation();
 
   return (
     <Link
@@ -11,7 +13,7 @@ function NavLink({ href, title, className }) {
         location.pathname === href ? "bg-[#D1D3D5]" : ""
       } ${className}`}
     >
-      {title}
+      {t(`${title}`)}
     </Link>
   );
 }

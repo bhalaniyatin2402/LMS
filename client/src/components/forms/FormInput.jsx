@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 function FormInput({
   name,
   onChange,
@@ -7,6 +9,8 @@ function FormInput({
   placeholder,
   type,
 }) {
+  const { t } = useTranslation();
+
   return (
     <>
       <input
@@ -16,11 +20,11 @@ function FormInput({
         type={type || name}
         onChange={onChange}
         value={values[name]}
-        placeholder={placeholder || name}
+        placeholder={placeholder ? t(`${placeholder}`) : t(`${name}`)}
       />
       {touched[name] && errors[name] ? (
         <span className="text-sm mr-auto text-red-900 w-auto sm:w-[270px]">
-          {errors[name]}
+          {t(`${errors[name]}`)}
         </span>
       ) : null}
     </>

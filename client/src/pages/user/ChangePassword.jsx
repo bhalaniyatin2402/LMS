@@ -1,5 +1,6 @@
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 
 import FormLayout from "../../components/layouts/FormLayout";
@@ -10,6 +11,7 @@ import { changePasswordSchema } from "../../constants/formAuthSchema";
 function ChangePassword() {
   const navigate = useNavigate();
   const [changePassword, { isLoading }] = useChangePasswordMutation();
+  const { t } = useTranslation();
 
   const { values, touched, errors, handleSubmit, handleChange } = useFormik({
     initialValues: {
@@ -55,7 +57,7 @@ function ChangePassword() {
         }`}
       >
         {isLoading && <span className="loading loading-spinner"></span>}
-        update password
+        {t("Change Password")}
       </button>
     </FormLayout>
   );

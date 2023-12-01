@@ -80,7 +80,7 @@ export const addLectureSchema = yup.object({
   name: yup
     .string()
     .min(8, "atleast 5 character required")
-    .max(40, "must be 40 character or less")
+    .max(40, "must be 50 character or less")
     .required("name is required"),
   description: yup
     .string()

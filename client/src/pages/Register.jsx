@@ -4,6 +4,7 @@ import { toast } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { BiEdit } from "react-icons/bi";
+import { useTranslation } from "react-i18next";
 
 import FormInput from "../components/forms/FormInput";
 import FormLayout from "../components/layouts/FormLayout";
@@ -20,6 +21,7 @@ function Register() {
   const dispatch = useDispatch();
   const [previewImage, setPreviewImage] = useState("");
   const [register, { isLoading }] = useRegisterMutation();
+  const { t } = useTranslation()
 
   const { values, errors, touched, setFieldValue, handleSubmit, handleChange } =
     useFormik({
@@ -73,7 +75,7 @@ function Register() {
 
   return (
     <>
-      <FormLayout onSubmit={handleSubmit} title="Registration Page">
+      <FormLayout onSubmit={handleSubmit} title="Register Form">
         <label htmlFor="avatar" id="avatarLabel">
           <span className="profile-image">
             {previewImage ? (
@@ -92,7 +94,7 @@ function Register() {
           />
         </label>
         {errors.avatar ? (
-          <span className="text-sm text-red-900">{errors.avatar}</span>
+          <span className="text-sm text-red-900">{t(`${errors.avatar}`)}</span>
         ) : null}
         <FormInput
           name="name"
@@ -122,13 +124,13 @@ function Register() {
           }`}
         >
           {isLoading && <span className="loading loading-spinner"></span>}
-          Register
+          {t('Register')}
         </button>
       </FormLayout>
       <p className="loginlink">
-        Already have an Account ? &nbsp;
+        {t('Already have an Account')} ? &nbsp;
         <Link to="/login" className="link text-blue-950">
-          login
+          {t('Login')}
         </Link>
       </p>
     </>

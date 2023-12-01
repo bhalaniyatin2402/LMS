@@ -1,5 +1,6 @@
 import { useFormik } from "formik";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 
 import FormInput from "../components/forms/FormInput";
@@ -11,6 +12,7 @@ function ResetPassword() {
   const resetToken = useParams();
   const navigate = useNavigate();
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
+  const { t } = useTranslation()
 
   const { values, touched, errors, handleSubmit, handleChange } = useFormik({
     initialValues: {
@@ -57,8 +59,8 @@ function ResetPassword() {
         }`}
       >
         {isLoading && <span className="loading loading-spinner"></span>}
-        reset password
-      </button>
+        {t('Reset Password')}
+      </button> 
     </FormLayout>
   );
 }

@@ -2,6 +2,7 @@ import { BiEdit } from "react-icons/bi";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 
 import FormLayout from "../../components/layouts/FormLayout";
@@ -22,6 +23,7 @@ function EditProfile() {
   const [previewImage, setPreviewImage] = useState("");
   const { data, isLoading: loading, isError } = useGetUserDetailQuery();
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
+  const { t } = useTranslation()
 
   const { values, touched, errors, handleSubmit, handleChange, setFieldValue } =
     useFormik({
@@ -125,7 +127,7 @@ function EditProfile() {
         }`}
       >
         {isLoading && <span className="loading loading-spinner"></span>}
-        update profile
+        {t('Update Profile')}
       </button>
     </FormLayout>
   );

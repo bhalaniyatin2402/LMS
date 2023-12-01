@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useLocation, Navigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import "../../styles/pages/Checkout.scss";
 
 function Checkout() {
   const { state } = useLocation();
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   if (state === null || !state) {
     return <Navigate to="/courses" />;
@@ -42,16 +44,19 @@ function Checkout() {
   return (
     <main className="checkout">
       <div className="container">
-        <h1>Order Details</h1>
+        <h1>{t("Order details")}</h1>
         <div className="course-data">
           <img src={state?.thumbnail?.secure_url} />
           <h2>{state?.title}</h2>
         </div>
         <div className="course-time">
-          Access: <span>{state?.expiry} Months</span>
+          {t("access")}:{" "}
+          <span>
+            {state?.expiry} {t("months")}
+          </span>
         </div>
         <div className="course-price">
-          Price: <span>{state?.price}₹</span>
+          {t("price")}: <span>{state?.price}₹</span>
         </div>
         <button
           type="submit"
@@ -61,7 +66,7 @@ function Checkout() {
           onClick={handleCheckout}
         >
           {loading && <span className="loading loading-spinner"></span>}
-          Process To Checkout
+          {t("process to checkout")}
         </button>
       </div>
     </main>

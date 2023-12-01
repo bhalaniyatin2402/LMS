@@ -16,14 +16,14 @@ export const registerSchema = yup.object({
   email: yup
     .string()
     .email("Invalid email address")
-    .matches(validEmailAddress, "Invalid Email Address")
+    .matches(validEmailAddress, "Invalid email address")
     .required("please enter your email"),
   password: yup
     .string()
     .min(6, "password atleast 6 character long")
     .max(16, "must 16 character or less")
     .matches(validPasswoed, "atleast a number and special character")
-    .required("please enter password"),
+    .required("password is required"),
   avatar: yup
     .mixed()
     .nonNullable()
@@ -48,7 +48,7 @@ export const loginSchema = yup.object({
   password: yup
     .string()
     // .matches(validPasswoed, "invalid password")
-    .required("passwor is required"),
+    .required("password is required"),
 });
 
 export const resetPasswordSchema = yup.object({
@@ -57,7 +57,7 @@ export const resetPasswordSchema = yup.object({
     .min(6, "password atleast 6 character long")
     .max(16, "must 16 character or less")
     .matches(validPasswoed, "atleast a number and special character")
-    .required(),
+    .required("password is required"),
   confirmPassword: yup
     .string()
     .oneOf([yup.ref("password"), null], "password must matched"),
@@ -72,7 +72,7 @@ export const editProfileSchema = yup.object({
   email: yup
     .string()
     .email("Invalid email address")
-    .matches(validEmailAddress, "Invalid Email Address")
+    .matches(validEmailAddress, "Invalid email Address")
     .required("please enter your email"),
   avatar: yup
     .mixed()

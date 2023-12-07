@@ -48,7 +48,7 @@ function Navbar() {
           <summary>
             <IoLanguage className="text-xl" />
           </summary>
-          <ul className="bg-base-200 rounded-lg">
+          <ul className="bg-[#F2F2F2] rounded-lg">
             <li onClick={() => changeLanguage("en")}>
               <a className="mx-auto">English</a>
             </li>

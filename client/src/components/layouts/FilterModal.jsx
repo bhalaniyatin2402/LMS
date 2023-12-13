@@ -6,7 +6,7 @@ function FilterModal({ onSubmit, children, setShow }) {
 
   return (
     <dialog id="my_modal_1" className="modal">
-      <div className="modal-box">
+      <div className="modal-box bg-[#EAEAEC]">
         <h3 className="font-bold text-lg">
           <BsFilter />
           {t('Filter')}

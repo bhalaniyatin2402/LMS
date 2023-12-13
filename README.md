@@ -53,7 +53,6 @@ git clone https://github.com/bhalaniyatin2402/LMS.git
     - `CLOUD_NAME`
     - `CLOUD_API_KEY`
     - `CLOUD_API_SECRET`
-  - razorpay credentials
-    - `RAZORPAY_KEY_ID`
-    - `RAZORPAY_SECRET`
+  - stripe credentials
+    - `STRIPE_SECRET`
 - `npm run dev` to start project

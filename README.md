@@ -1,7 +1,7 @@
 # Learning Management System using MERN stack
 
 ### User Credentials for Testing
-#### currently payment gateway of razorpay is going to trouble on razorpay side in test mode so you can test via this users.
+
 - `user one`
   - `email` : one@gmail.com
   - `password` : one@1234
@@ -18,6 +18,8 @@
 - `lecture notes` - user add notes to each lecture
 - `lecture mark` - user can mark viewd lecture
 - `dashboard` - details of users and courses
+- `languages` - app available in english, hindi and gujarati language
+- `realtime-chat` - chat with other people on this app
 
 ## Project Setup
 
@@ -33,6 +35,10 @@ git clone https://github.com/bhalaniyatin2402/LMS.git
 
 - `cd client` in root directory
 - `npm install` in client directory to install all depedncies
+- Set `environment variables`
+  - `VITE_APP_NODE_ENV`
+  - `VITE_APP_COURSIFY_API`
+  - `VITE_APP_STRIPE_KEY`
 - `npm run dev` to start project
 
 ### Backend setup

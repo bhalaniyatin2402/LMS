@@ -38,10 +38,11 @@
 - @reduxjs/toolkit
 - react-redux
 - formik
+- socket.io-client
 - yup
 - react-hot-toast
 - daisyui
-- js-cookie
+- react-i18next
 - react-icons
 - react-router-dom
 - sass

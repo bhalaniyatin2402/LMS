@@ -42,7 +42,8 @@
 - mongoose
 - multer
 - nodemailer
-- razorpay
+- socket.io
+- stripe
 
 
 ## File Structure

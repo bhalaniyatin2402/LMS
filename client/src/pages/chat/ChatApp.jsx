@@ -27,7 +27,9 @@ function ChatApp({ data, users }) {
 
   useEffect(() => {
     socket.on("get message", (value) => {
-      setNewMessages((messages) => [...messages, value]);
+      if (chatroom == value.chatroomId) {
+        setNewMessages((messages) => [...messages, value]);
+      }
       if (value.sender !== data?.user?._id) {
         dispatch(
           incUnreadCounts({
@@ -39,7 +41,7 @@ function ChatApp({ data, users }) {
     });
 
     return () => socket.off("get message");
-  }, []);
+  }, [chatroom]);
 
   return (
     <>

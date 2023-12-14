@@ -44,7 +44,7 @@ function ChatIcon() {
         chat
       </div>
       <dialog id="my_modal_3" className="modal">
-        <div className="modal-box w-72 p-2">
+        <div className="modal-box w-72 p-2 bg-[#ffffff]">
           <form method="dialog">
             <button
               className="btn btn-sm btn-circle btn-ghost absolute right-0 top-1"

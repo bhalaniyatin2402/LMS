@@ -44,10 +44,10 @@ io.on("connection", (socket) => {
 
       const message = new Message({
         sender: senderId,
-        receiver: receiverId,
         chatroomId,
         content,
       });
+
       const resullt = await message.save();
 
       if (resullt) {

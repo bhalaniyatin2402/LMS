@@ -9,20 +9,22 @@ function ChatInput({ data }) {
   const chat = useSelector((state) => state.chat);
 
   function handleSendMessage() {
-    socket.emit("send message", {
-      senderId: data?.user?._id,
-      receiverId: chat?.account?._id,
-      chatroomId: chat?.chatroomId,
-      content: value,
-    });
-    setValue("");
+    if (value) {
+      socket.emit("send message", {
+        senderId: data?.user?._id,
+        receiverId: chat?.account?._id,
+        chatroomId: chat?.chatroomId,
+        content: value,
+      });
+      setValue("");
+    }
   }
 
   return (
     <div className="w-[100%] flex justify-center items-center gap-2 p-1">
       <textarea
         type="text"
-        className="border rounded-xl px-2 py-[2px] resize-none"
+        className="border rounded-xl px-2 py-[2px] resize-none bg-[#ffffff]"
         placeholder="write your message"
         value={value}
         onChange={(e) => setValue(e.target.value)}

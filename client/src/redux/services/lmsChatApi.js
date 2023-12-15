@@ -2,16 +2,9 @@ import { lmsAuthApi } from "./lmsAuthApi";
 
 const lmsChatApi = lmsAuthApi.injectEndpoints({
   endpoints: (build) => ({
-    getChatroomId: build.mutation({
+    createChatroomId: build.mutation({
       query: (data) => ({
-        url: "/chat/chatroom/get",
-        method: "POST",
-        body: data,
-      }),
-    }),
-    getConversaton: build.mutation({
-      query: (data) => ({
-        url: "/chat/messages/get",
+        url: "/chat/chatroom/create",
         method: "POST",
         body: data,
       }),
@@ -40,14 +33,17 @@ const lmsChatApi = lmsAuthApi.injectEndpoints({
         body: data,
       }),
     }),
+    getAllConversationsOfUser: build.mutation({
+      query: (id) => `/chat/conversations/get?userId=${id}`,
+    }),
   }),
 });
 
 export const {
-  useGetChatroomIdMutation,
-  useGetConversatonMutation,
+  useCreateChatroomIdMutation,
   useGetUsersListQuery,
   useGetUnreadCountsListMutation,
   useIncUnreadCountMutation,
   useDecUnreadCountMutation,
+  useGetAllConversationsOfUserMutation,
 } = lmsChatApi;

@@ -1,20 +1,34 @@
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FaArrowLeft } from "react-icons/fa";
 
 import Messages from "./Messages";
 import ChatInput from "./ChatInput";
-import { setChatroomId } from "../../../redux/slices/chatSlice";
+import {
+  decUnreadCounts,
+  setChatroomId,
+} from "../../../redux/slices/chatSlice";
+import { useDecUnreadCountMutation } from "../../../redux/services/lmsChatApi";
 
-function Chat({
-  data,
-  conversation,
-  newMessages,
-  setConversation,
-  setNewMessages,
-}) {
+function Chat({ data }) {
   const dispatch = useDispatch();
-  const account = useSelector((state) => state.chat.account);
-  const activeUsers = useSelector((state) => state?.chat?.activeUsers);
+  const chat = useSelector((state) => state.chat);
+  const [decUnredCount] = useDecUnreadCountMutation();
+
+  useEffect(() => {
+    dispatch(
+      decUnreadCounts({
+        user: chat?.account?._id,
+        chatroomId: chat?.chatroomId,
+      })
+    );
+    (async function () {
+      await decUnredCount({
+        user: chat?.account?._id,
+        chatroomId: chat?.chatroomId,
+      });
+    })();
+  }, []);
 
   return (
     <div className="h-[400px]">
@@ -23,25 +37,19 @@ function Chat({
           className="cursor-pointer text-xl mx-2"
           onClick={() => {
             dispatch(setChatroomId(""));
-            setConversation([]);
-            setNewMessages([]);
           }}
         />
-        <img src={account?.avatar} className="w-[40px] rounded-full" />
+        <img src={chat?.account?.avatar} className="w-[40px] rounded-full" />
         <div className="chat-header">
-          <h1 className="text-xl font-bold">{account?.name}</h1>
+          <h1 className="text-xl font-bold">{chat?.account?.name}</h1>
           <h2>
-            {activeUsers.some((obj) => obj.userId === account._id)
+            {chat?.activeUsers.some((obj) => obj.userId === chat?.account._id)
               ? "online"
               : "offline"}
           </h2>
         </div>
       </div>
-      <Messages
-        data={data}
-        conversation={conversation}
-        newMessages={newMessages}
-      />
+      <Messages data={data} />
       <ChatInput data={data} />
     </div>
   );

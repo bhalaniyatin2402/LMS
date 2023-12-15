@@ -10,7 +10,7 @@ import asyncHandler from "../middleware/asyncHandler.middleware.js";
  * @ACCESS login user only {{url}}/api/v1/chat/chatroom/get
  */
 
-export const getChatroomId = asyncHandler(async (req, res, next) => {
+export const createChatroom = asyncHandler(async (req, res, next) => {
   const { senderId, receiverId } = req.body;
 
   if (!senderId || !receiverId) {
@@ -42,21 +42,31 @@ export const getChatroomId = asyncHandler(async (req, res, next) => {
 });
 
 /**
- * @GET_CONVERSATION
+ * @GET_ALL_CONVERSATION_OF_USER
  * @ROUTE @POST
- * @ACCESS login user only {{url}}/api/v1/chat/messages/get
+ * @ACCESS login user only {{url}}/api/v1/chat/unread-counts/inc
  */
 
-export const getConversaton = asyncHandler(async (req, res, next) => {
-  const { chatroomId } = req.body;
+export const getAllConversationOfUser = asyncHandler(async (req, res, next) => {
+  const { userId } = req.query;
 
-  const conversation = await Message.find({ chatroomId });
+  const chatroomList = await Chatroom.find(
+    { participants: { $in: [userId] } },
+    { unreadCounts: 0, __v: 0 }
+  );
 
-  if (!conversation) {
-    return next(new AppError("no conversation found on this chatroom id", 400));
+  const userConversations = {};
+
+  for (const key of chatroomList) {
+    let messages = await Message.find({ chatroomId: key._id });
+    userConversations[key._id] = messages;
   }
 
-  res.status(200).json(conversation);
+  res.status(200).json({
+    success: true,
+    chatroomList,
+    userConversations,
+  });
 });
 
 /**
@@ -84,15 +94,15 @@ export const getUnreadCountList = asyncHandler(async (req, res, next) => {
     return next(new AppError("sender id is required", 400));
   }
 
-  const conversations = await Chatroom.find({
+  const chatrooms = await Chatroom.find({
     participants: { $in: [senderId] },
   });
 
-  if (!conversations) {
+  if (!chatrooms) {
     return next(new AppError("no conversation found on this user", 400));
   }
 
-  const unreadCounts = conversations.map((item) => {
+  const unreadCounts = chatrooms.map((item) => {
     return item.unreadCounts.find((i) => i.user != senderId);
   });
 

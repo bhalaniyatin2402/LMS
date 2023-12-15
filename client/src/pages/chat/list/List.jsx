@@ -1,43 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  setChatroomId,
   setAccount,
-  decUnreadCounts,
+  setChatroomIdThunk,
 } from "../../../redux/slices/chatSlice";
-import {
-  useGetChatroomIdMutation,
-  useDecUnreadCountMutation,
-  useGetConversatonMutation,
-} from "../../../redux/services/lmsChatApi";
 
-function List({ data, users, setConversation }) {
+function List({ data, users }) {
   const dispatch = useDispatch();
   const activeUsers = useSelector((state) => state.chat.activeUsers);
   const unreadCounts = useSelector((state) => state.chat.unreadCounts);
-  const [decUnredCount] = useDecUnreadCountMutation();
-  const [getChatroom] = useGetChatroomIdMutation();
-  const [getConversation] = useGetConversatonMutation();
-
-  async function getChatroomAndConversation(user) {
-    const result = await getChatroom({
-      senderId: data?.user?._id,
-      receiverId: user?._id,
-    });
-    dispatch(setChatroomId(result?.data?.chatroomId));
-    dispatch(
-      decUnreadCounts({
-        user: user?._id,
-        chatroomId: result?.data?.chatroomId,
-      })
-    );
-    const res = await getConversation({ chatroomId: result?.data?.chatroomId });
-    setConversation(res?.data);
-    await decUnredCount({
-      user: user?._id,
-      chatroomId: result?.data?.chatroomId,
-    });
-  }
 
   function setAccountFunc(user) {
     dispatch(
@@ -48,6 +19,7 @@ function List({ data, users, setConversation }) {
         _id: user?._id,
       })
     );
+    dispatch(setChatroomIdThunk(data?.user?._id));
   }
 
   return (
@@ -66,10 +38,7 @@ function List({ data, users, setConversation }) {
               <div
                 key={user?._id}
                 className="relative flex gap-4 py-2 border border-b-0 cursor-pointer"
-                onClick={() => {
-                  getChatroomAndConversation(user);
-                  setAccountFunc(user);
-                }}
+                onClick={() => setAccountFunc(user)}
               >
                 <div className="relative">
                   {activeUsers.map(

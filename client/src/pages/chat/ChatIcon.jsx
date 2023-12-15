@@ -1,36 +1,53 @@
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { IoChatboxEllipses } from "react-icons/io5";
 
 import ChatApp from "./ChatApp";
 import socket from "../../../socket";
-import { setActiveUsers, setUnreadCounts } from "../../redux/slices/chatSlice";
+import {
+  setUnreadCounts,
+  setConversations,
+  setChatroomList,
+  clearChatroomState,
+} from "../../redux/slices/chatSlice";
 import { useGetUserDetailQuery } from "../../redux/services/lmsAuthApi";
 import {
+  useGetAllConversationsOfUserMutation,
   useGetUnreadCountsListMutation,
   useGetUsersListQuery,
 } from "../../redux/services/lmsChatApi";
 
 function ChatIcon() {
   const dispatch = useDispatch();
-  const { isLoading, data } = useGetUserDetailQuery();
-  const { isLoading: loading, data: users } = useGetUsersListQuery();
+  const { isLoading, data, error } = useGetUserDetailQuery();
+  const {
+    isLoading: loading,
+    data: users,
+    error: err,
+  } = useGetUsersListQuery();
+  const [getAllConversationsOfUser] = useGetAllConversationsOfUserMutation();
   const [getUnreadCountList] = useGetUnreadCountsListMutation();
 
   async function handleUserConnect() {
-    document.getElementById("my_modal_3").showModal();
     socket.connect();
+    document.getElementById("my_modal_3").showModal();
     socket.emit("addUser", data?.user._id);
+    const res = await getAllConversationsOfUser(data?.user?._id);
+    dispatch(setConversations(res?.data?.userConversations));
+    dispatch(setChatroomList(res?.data?.chatroomList));
     const result = await getUnreadCountList(data?.user?._id);
     dispatch(setUnreadCounts(result?.data));
   }
 
   function handleUserDisconnect() {
     socket.disconnect();
-    dispatch(setActiveUsers([]));
+    dispatch(clearChatroomState());
   }
 
   if (isLoading || loading) {
+    return;
+  }
+
+  if (error || err) {
     return;
   }
 

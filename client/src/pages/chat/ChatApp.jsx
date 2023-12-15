@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import List from "./list/List.jsx";
@@ -7,13 +7,14 @@ import socket from "../../../socket.js";
 import {
   setActiveUsers,
   incUnreadCounts,
+  updateConversations,
 } from "../../redux/slices/chatSlice.js";
+import { useIncUnreadCountMutation } from "../../redux/services/lmsChatApi.js";
 
 function ChatApp({ data, users }) {
   const dispatch = useDispatch();
   const chatroom = useSelector((state) => state.chat.chatroomId);
-  const [conversation, setConversation] = useState([]);
-  const [newMessages, setNewMessages] = useState([]);
+  const [incUnreadCount] = useIncUnreadCountMutation();
 
   useEffect(() => {
     socket.on("getUsers", (value) => {
@@ -26,17 +27,21 @@ function ChatApp({ data, users }) {
   }, []);
 
   useEffect(() => {
-    socket.on("get message", (value) => {
-      if (chatroom == value.chatroomId) {
-        setNewMessages((messages) => [...messages, value]);
-      }
+    socket.on("get message", async (value) => {
+      dispatch(updateConversations(value));
       if (value.sender !== data?.user?._id) {
-        dispatch(
-          incUnreadCounts({
+        if (chatroom !== value.chatroomId) {
+          dispatch(
+            incUnreadCounts({
+              user: value.sender,
+              chatroomId: value.chatroomId,
+            })
+          );
+          await incUnreadCount({
             user: value.sender,
             chatroomId: value.chatroomId,
-          })
-        );
+          });
+        }
       }
     });
 
@@ -45,18 +50,8 @@ function ChatApp({ data, users }) {
 
   return (
     <>
-      {!chatroom && (
-        <List data={data} users={users} setConversation={setConversation} />
-      )}
-      {chatroom && (
-        <Chat
-          data={data}
-          conversation={conversation}
-          newMessages={newMessages}
-          setConversation={setConversation}
-          setNewMessages={setNewMessages}
-        />
-      )}
+      {!chatroom && <List data={data} users={users} />}
+      {chatroom && <Chat data={data} />}
     </>
   );
 }

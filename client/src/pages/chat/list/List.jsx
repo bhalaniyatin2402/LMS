@@ -21,6 +21,7 @@ function List({ data, users }) {
     );
     dispatch(setChatroomIdThunk(data?.user?._id));
   }
+  
 
   return (
     <div className="">

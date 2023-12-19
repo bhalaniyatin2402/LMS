@@ -10,8 +10,9 @@ import {
   updateConversations,
 } from "../../redux/slices/chatSlice.js";
 import { useIncUnreadCountMutation } from "../../redux/services/lmsChatApi.js";
+import Loader from "../../components/ui/Loader.jsx";
 
-function ChatApp({ data, users }) {
+function ChatApp({ data, users, isLoading }) {
   const dispatch = useDispatch();
   const chatroom = useSelector((state) => state.chat.chatroomId);
   const [incUnreadCount] = useIncUnreadCountMutation();
@@ -47,6 +48,10 @@ function ChatApp({ data, users }) {
 
     return () => socket.off("get message");
   }, [chatroom]);
+
+  if(isLoading) {
+    return <Loader classname='h-[300px]' />
+  }
 
   return (
     <>

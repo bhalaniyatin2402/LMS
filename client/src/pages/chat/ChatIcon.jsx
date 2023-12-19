@@ -24,7 +24,8 @@ function ChatIcon() {
     data: users,
     error: err,
   } = useGetUsersListQuery();
-  const [getAllConversationsOfUser] = useGetAllConversationsOfUserMutation();
+  const [getAllConversationsOfUser, { isLoading: converssationLoading }] =
+    useGetAllConversationsOfUserMutation();
   const [getUnreadCountList] = useGetUnreadCountsListMutation();
 
   async function handleUserConnect() {
@@ -70,7 +71,7 @@ function ChatIcon() {
               ✕
             </button>
           </form>
-          <ChatApp data={data} users={users} />
+          <ChatApp data={data} users={users} isLoading={converssationLoading} />
         </div>
       </dialog>
     </>

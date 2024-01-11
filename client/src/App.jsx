@@ -12,10 +12,14 @@ function App() {
   return (
     <>
       <Suspense fallback={<Loader />}>
-        <Header />
-        <CoutomRoutes />
-        <Footer />
-        {isLoggedIn && <ChatIcon />}
+        <div className="w-full">
+          <Header />
+          <div className="w-full max-w-[1296px] mx-auto">
+            <CoutomRoutes />
+          </div>
+          <Footer />
+          {isLoggedIn && <ChatIcon />}
+        </div>
       </Suspense>
     </>
   );

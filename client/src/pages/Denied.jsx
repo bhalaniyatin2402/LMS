@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import { useNavigate } from "react-router-dom";
 
 function Denied() {
@@ -8,7 +9,7 @@ function Denied() {
       <h1 className="relative text-9xl font-bold tracking-widest">
         403
         <p className="bg-white absolute top-1/2 left-1/2 -translate-x-1/2 rotate-12 text-sm tracking-wide w-fit mx-auto">
-          'access denied'
+          access denied
         </p>
       </h1>
       <button
@@ -18,7 +19,7 @@ function Denied() {
         {t('Go Back')}
       </button>
     </main>
-  );
+  );  
 }
 
 export default Denied;

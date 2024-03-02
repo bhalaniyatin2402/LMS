@@ -5,8 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import {
   useGetAllCorsesMutation,
-  useGetCategoryListQuery,
-  useGetInstructorListQuery,
+  useGetFilterListQuery,
 } from "../../redux/services/lmsCourseApi";
 import CourseCard from "../../components/ui/CourseCard";
 import FilterModal from "../../components/layouts/FilterModal";
@@ -18,17 +17,12 @@ import "../../styles/pages/course/CourseList.scss";
 
 function CourseList() {
   const {
-    data: categories,
-    isLoading: categoryLoading,
-    error: categoryError,
-  } = useGetCategoryListQuery();
-  const {
-    data: instructors,
-    isLoading: instructorLoading,
-    error: instructorError,
-  } = useGetInstructorListQuery();
+    data: filters,
+    isLoading: filtersLoading,
+    error: filtersError,
+  } = useGetFilterListQuery();
   const [getAllCourses, { data, isLoading, error }] = useGetAllCorsesMutation();
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   const { values, handleSubmit, setFieldValue } = useFormik({
     initialValues: {
@@ -39,10 +33,10 @@ function CourseList() {
       let category = values.category;
       let instructor = values.instructor;
       if (category.length === 0) {
-        category = categories;
+        category = filters?.categories;
       }
       if (instructor.length === 0) {
-        instructor = instructors;
+        instructor = filters?.instructors;
       }
       await getAllCourses({ category, instructor });
     },
@@ -52,24 +46,24 @@ function CourseList() {
     getAllCourses();
   }, []);
 
-  if (isLoading || categoryLoading || instructorLoading) {
+  if (isLoading || filtersLoading) {
     return <Loader />;
   }
 
-  if (error || categoryError || instructorError) {
+  if (error || filtersError) {
     return <PageNotFound />;
   }
 
   return (
     <>
       <main className="courses-page">
-        <h1>{t('Explore Courses')}</h1>
+        <h1>{t("Explore Courses")}</h1>
         <div
           className="filter-icon"
           onClick={() => document.getElementById("my_modal_1").showModal()}
         >
           <FcFilledFilter />
-          <span>{t('Filter')}</span>
+          <span>{t("Filter")}</span>
         </div>
         <div className="course-list">
           {data?.courses.length !== 0 ? (
@@ -87,14 +81,14 @@ function CourseList() {
 
       <FilterModal onSubmit={handleSubmit}>
         <Checkbox
-          options={categories}
+          options={filters?.categories}
           values={values}
           name="category"
           filterTitle="Filter By Category"
           setFieldValue={setFieldValue}
         />
         <Checkbox
-          options={instructors}
+          options={filters?.instructors}
           values={values}
           name="instructor"
           filterTitle="Filter By Instructor"

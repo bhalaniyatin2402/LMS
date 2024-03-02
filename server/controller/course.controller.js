@@ -14,13 +14,13 @@ export const createCourse = asyncHandler(async (req, res, next) => {
   const { title, description, createdBy, category, price, expiry } = req.body;
 
   if (!title || !description || !createdBy || !category || !price || !expiry) {
-    if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
+    if (req.file) fs.rmSync(`uploads/${req.file.filename}`);
     return next(new AppError("all fields are required", 400));
-}
+  }
 
-const isCourseExist = await Course.findOne({ title });
-if (isCourseExist) {
-    if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
+  const isCourseExist = await Course.findOne({ title });
+  if (isCourseExist) {
+    if (req.file) fs.rmSync(`uploads/${req.file.filename}`);
     return next(new AppError("title is already used in another course", 400));
   }
 
@@ -89,7 +89,7 @@ export const getAllCourses = asyncHandler(async (req, res, next) => {
 
     courses = await Course.find({
       $and: [
-        { category: { $in: categories } },  
+        { category: { $in: categories } },
         { createdBy: { $in: instructors } },
       ],
     }).select("-lectures");
@@ -199,7 +199,7 @@ export const getLecturesByCourseId = asyncHandler(async (req, res, next) => {
     success: true,
     message: "course lectures fetch successfully",
     lectures: course.lectures,
-    title: course.title
+    title: course.title,
   });
 });
 
@@ -214,15 +214,8 @@ export const addLectureIntoCourseById = asyncHandler(async (req, res, next) => {
   const { name, description } = req.body;
 
   if (!name || !description || !req.file) {
-    if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
+    if (req.file) fs.rmSync(`uploads/${req.file.filename}`);
     return next(new AppError("all fields are required", 400));
-  }
-
-  const course = await Course.findById(courseId);
-
-  if (!course) {
-    fs.rmSync(`uploads/${req.file.filename}`)
-    return next(new AppError("course not found!", 400));
   }
 
   const lectureData = {
@@ -246,20 +239,25 @@ export const addLectureIntoCourseById = asyncHandler(async (req, res, next) => {
 
       fs.rmSync(`uploads/${req.file.filename}`);
     } catch (error) {
-      for (const file of fs.readdir("uploads/")) {
-        fs.rmSync(`uploads/${file}`);
-      }
+      fs.rmSync(`uploads/${req.file.filename}`);
     }
   }
 
-  course.lectures.push(lectureData);
-  course.numberOfLectures = course.lectures.length;
-  await course.save();
+  await Course.updateOne(
+    { _id: courseId },
+    {
+      $addToSet: {
+        lectures: lectureData,
+      },
+      $inc: {
+        numberOfLectures: 1
+      }
+    }
+  );
 
   res.status(200).json({
     success: true,
     message: "lecture added to course successfully",
-    lectures: course.lectures,
   });
 });
 
@@ -275,38 +273,28 @@ export const updateLectureIntoCourseById = asyncHandler(
     const { lectureId } = req.query;
 
     if (!courseId || !lectureId) {
-      if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
+      if (req.file) fs.rmSync(`uploads/${req.file.filename}`);
       return next(new AppError("course id or lecture id is not found", 400));
     }
 
-    const course = await Course.findById(courseId);
-
-    if (!course) {
-      if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
-      return next(new AppError("course not found", 400));
-    }
-
-    const lectureIndex = course.lectures.findIndex(
-      (lecture) => lecture._id.toString() === lectureId
+    const lectureData = await Course.findOne(
+      { _id: courseId },
+      { lectures: { $elemMatch: { _id: lectureId } } }
     );
 
-    if (lectureIndex === -1) {
-      if(req.file) fs.rmSync(`uploads/${req.file.filename}`)
-      return next(new AppError("lecture does not exist", 400));
-    }
-
-    for (const key in req.body) {
-      if (key in course.lectures[lectureIndex]) {
-        course.lectures[lectureIndex][key] = req.body[key];
-      }
-    }
+    lectureData.lectures[0] = {
+      ...req.body,
+      lecture: { ...lectureData.lectures[0].lecture },
+    };
 
     if (req.file) {
       try {
-        await cloudinary.v2.uploader.destroy(
-          course.lectures[lectureIndex].lecture.public_id,
-          { resource_type: "video" }
-        );
+        if (lectureData.lectures[0].lecture.public_id) {
+          await cloudinary.v2.uploader.destroy(
+            lectureData.lectures[0].lecture.public_id,
+            { resource_type: "video" }
+          );
+        }
 
         const result = await cloudinary.v2.uploader.upload(req.file.path, {
           folder: "lms",
@@ -315,19 +303,19 @@ export const updateLectureIntoCourseById = asyncHandler(
         });
 
         if (result) {
-          course.lectures[lectureIndex].lecture.public_id = result.public_id;
-          course.lectures[lectureIndex].lecture.secure_url = result.secure_url;
+          lectureData.lectures[0].lecture = {
+            public_id: result.public_id,
+            secure_url: result.secure_url,
+          };
         }
 
         fs.rmSync(`uploads/${req.file.filename}`);
       } catch (error) {
-        for (const file of fs.readdir("uploads")) {
-          fs.rmSync(`uploads/${file}`);
-        }
+        fs.rmSync(`uploads/${req.file.filename}`);
       }
     }
 
-    await course.save();
+    await lectureData.save();
 
     res.status(200).json({
       success: true,
@@ -351,30 +339,33 @@ export const removeLectureFromCourseById = asyncHandler(
       return next(new AppError("course id or lecture is does not found", 400));
     }
 
-    const course = await Course.findById(courseId);
-
-    if (!course) {
-      return next(new AppError("course not found on this id", 400));
+    const lectureData = await Course.findOne(
+      { _id: courseId },
+      {
+        lectures: {
+          $elemMatch: { _id: lectureId }
+        }
+      }
+    )
+    
+    if(lectureData.lectures[0].lecture) {
+      await cloudinary.v2.uploader.destroy(
+        lectureData.lectures[0].lecture.public_id,
+        { resource_type: "video" }
+      );
     }
 
-    const lectureIndex = course.lectures.findIndex(
-      (lecture) => lecture._id.toString() === lectureId
-    );
-
-    if (lectureIndex === -1) {
-      return next(new AppError("lecture does not exist", 400));
-    }
-
-    await cloudinary.v2.uploader.destroy(
-      course.lectures[lectureIndex].lecture.public_id,
-      { resource_type: "video" }
-    );
-
-    course.lectures.splice(lectureIndex, 1);
-
-    course.numberOfLectures = course.lectures.length;
-
-    await course.save();
+    await Course.findOneAndUpdate(
+      { _id: courseId },
+      {
+        $pull: {
+          lectures: { _id: lectureId }
+        },
+        $inc: {
+          numberOfLectures: -1
+        }
+      }
+    )
 
     res.status(200).json({
       success: true,
@@ -384,49 +375,30 @@ export const removeLectureFromCourseById = asyncHandler(
 );
 
 /**
- * @CATEGORY_LIST
+ * @GET_FILTER_LIST
  * @ROUTE @GET
- * @ACCESS public {{url}}/api/v1/course/category
+ * @ACCESS public {{url}}/api/v1/course/filters
  */
 
-export const getCategoryList = asyncHandler(async (req, res, next) => {
-  const courses = await Course.find({}, { _id: 0, category: 1 });
-
-  if (!courses) {
-    return next(new AppError("courses not found", 400));
-  }
-
-  const courseList = [];
-  courses.map((c) => {
-    if (!courseList.includes(c.category)) {
-      return courseList.push(c.category);
+export const getFilterList = asyncHandler(async (req, res, next) => {
+  const filterList = await Course.aggregate([
+    { 
+      $group: {
+        _id: null,
+        categories: {
+          $addToSet: "$category"
+        },
+        instructors: {
+          $addToSet: "$createdBy"
+        }
+      }
+    },
+    {
+      $project: {
+        _id: 0
+      }
     }
-    return
-  });
+  ])
 
-  res.status(200).json(courseList);
-});
-
-/**
- * @INSTRUCTOR_LIST
- * @ROUTE @GET
- * @ACCESS public {{url}}/api/v1/course/instructor
- */
-
-export const getInstructorList = asyncHandler(async (req, res, next) => {
-  const courses = await Course.find({}, { _id: 0, createdBy: 1 });
-
-  if (!courses) {
-    return next(new AppError("coursse not found", 400));
-  }
-
-  const instructorList = [];
-  courses.map((c) => {
-    if (!instructorList.includes(c.createdBy)) {
-      return instructorList.push(c.createdBy);
-    }
-    return
-  });
-
-  res.status(200).json(instructorList);
+  res.status(200).json(filterList[0]);
 });

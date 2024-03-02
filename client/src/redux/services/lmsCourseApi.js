@@ -2,13 +2,9 @@ import { lmsAuthApi } from "./lmsAuthApi";
 
 export const lmsCourseApi = lmsAuthApi.injectEndpoints({
   endpoints: (build) => ({
-    getCategoryList: build.query({
-      query: () => `/course/category`,
-      providesTags: [{ type: "Course" }],
-    }),
-    getInstructorList: build.query({
-      query: () => "/course/instructor",
-      providesTags: [{ type: "Course" }],
+    getFilterList: build.query({
+      query: () => `/course/filters`,
+      providesTags: [{ type: "Course" }]
     }),
     getAllCorses: build.mutation({
       query: (data) => ({
@@ -74,6 +70,7 @@ export const lmsCourseApi = lmsAuthApi.injectEndpoints({
 export const {
   useGetCategoryListQuery,
   useGetInstructorListQuery,
+  useGetFilterListQuery,
   useGetAllCorsesMutation,
   useCreateCourseMutation,
   useUpdateCourseMutation,

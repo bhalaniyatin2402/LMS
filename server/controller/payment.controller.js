@@ -13,7 +13,7 @@ import { coursePurchasingMail } from "../utils/mail.utils.js";
  * @ACCESS login user only {{url}}/api/v1/checkout
  */
 
-export const checkout = asyncHandler(async (req, res) => {
+export const checkout = asyncHandler(async (req, res, next) => {
   const { amount, title, courseId } = req.body;
   const { id } = req.user;
 

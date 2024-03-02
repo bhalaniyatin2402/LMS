@@ -149,6 +149,7 @@ export const login = asyncHandler(async (req, res, next) => {
  */
 
 export const logout = asyncHandler(async (req, res, next) => {
+  res.cookie("token", "", { maxAge: 0, ...cookieOptions })
   res.clearCookie("token");
 
   res.status(200).json({

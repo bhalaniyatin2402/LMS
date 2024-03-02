@@ -2,7 +2,6 @@ import MyCourse from "../models/my.course.model.js";
 import Payment from "../models/payment.model.js";
 import asyncHandler from "../middleware/asyncHandler.middleware.js";
 import AppError from "../utils/error.utils.js";
-import Course from "../models/course.model.js";
 
 /**
  * @GET_MY_COURSE_LIST
@@ -13,37 +12,64 @@ import Course from "../models/course.model.js";
 export const getMyAllCourses = asyncHandler(async (req, res, next) => {
   const { id } = req.user;
 
-  const payment = await Payment.findOne({ userId: id });
-  const courses = await Course.find().select("-lectures");
+  const myPurchasedCourseList = await Payment.aggregate([
+    {
+      $match: {
+        userId: id,
+      },
+    },
+    {
+      $unwind: "$purchasedCourse",
+    },
+    {
+      $project: {
+        _id: 0,
+        courseId: {
+          $toObjectId: "$purchasedCourse.courseId",
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "courses",
+        localField: "courseId",
+        foreignField: "_id",
+        as: "purchasedCourses",
+        pipeline: [
+          {
+            $project: {
+              title: 1,
+              thumbnail: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $project: {
+        purchasedCourses: {
+          $first: "$purchasedCourses",
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        courseList: {
+          $push: "$purchasedCourses",
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+      },
+    },
+  ]);
 
-  if (!payment) {
-    return next(new AppError(`still! you can't purchase any courses`, 403));
-  }
-
-  let listOfCourseIds = [];
-  let listOfMyCourses = []
-
-  payment.purchasedCourse.map(item => {
-    item.purchaseDetails.map(i => {
-      if(i.expirationDate > Date.now()) {
-        listOfCourseIds.push(item.courseId)
-      }
-    })
-  })
-
-  courses.map(item => {
-    if(listOfCourseIds.includes(item._id.toString())) {
-      listOfMyCourses.push({
-        _id: item._id,
-        title: item.title,
-        thumbnail: item.thumbnail
-      })
-    }
-  })
-  
   res.status(200).json({
     success: true,
-    courseList: listOfMyCourses,
+    courseList: myPurchasedCourseList[0]?.courseList || [],
   });
 });
 
@@ -57,26 +83,21 @@ export const getMyCourseLectureProgress = asyncHandler(
   async (req, res, next) => {
     const { id } = req.user;
     const { courseId } = req.params;
-    
-    const mycourse = await MyCourse.findOne({ userId: id });
 
-    if (!mycourse) {
-      return next(new AppError(`you don't have access of this course`, 400));
-    }
-
-    const courseIndex = mycourse.myPurchasedCourses.findIndex(
-      (item) => item.courseId === courseId
+    const myCourseProgress = await MyCourse.findOne(
+      { userId: id },
+      {
+        myPurchasedCourses: {
+          $elemMatch: {
+            courseId: courseId,
+          },
+        },
+      }
     );
-
-    if (courseIndex === -1) {
-      return next(new AppError(`you don't have access of this course`, 400));
-    }
-
-    const courseProgress = mycourse.myPurchasedCourses[courseIndex];
 
     res.status(200).json({
       success: true,
-      courseProgress,
+      courseProgress: myCourseProgress.myPurchasedCourses[0],
     });
   }
 );
@@ -91,36 +112,44 @@ export const addNote = asyncHandler(async (req, res, next) => {
   const { id } = req.user;
   const { note } = req.body;
   const { courseId } = req.params;
-  const { lectureId } = req.query
+  const { lectureId } = req.query;
 
-  const myCourse = await MyCourse.findOne({ userId: id });
-
-  const lectureInfo = {
-    lectureId,
-    notes: [note],
-  };
+  const myCourse = await MyCourse.findOneAndUpdate(
+    {
+      userId: id,
+      "myPurchasedCourses.courseId": courseId,
+    },
+    {
+      $addToSet: {
+        "myPurchasedCourses.$[elem].lectureProgress.$[subElem].notes": note,
+      },
+    },
+    {
+      arrayFilters: [
+        { "elem.courseId": courseId },
+        { "subElem.lectureId": lectureId },
+      ],
+      upsert: true,
+      new: true,
+    }
+  );
 
   const courseIndex = myCourse.myPurchasedCourses.findIndex(
     (item) => item.courseId === courseId
   );
-
-  if (courseIndex === -1) {
-    return next(new AppError(`you don't access of this course`, 400));
-  }
 
   const lectureIndex = myCourse.myPurchasedCourses[
     courseIndex
   ].lectureProgress.findIndex((item) => item.lectureId === lectureId);
 
   if (lectureIndex === -1) {
-    myCourse.myPurchasedCourses[courseIndex].lectureProgress.push(lectureInfo);
-  } else {
-    myCourse.myPurchasedCourses[courseIndex].lectureProgress[
-      lectureIndex
-    ].notes.push(note);
-  }
+    myCourse.myPurchasedCourses[courseIndex].lectureProgress.push({
+      lectureId,
+      notes: [note],
+    });
 
-  await myCourse.save();
+    await myCourse.save();
+  }
 
   res.status(200).json({
     success: true,
@@ -138,36 +167,44 @@ export const updateLectureMark = asyncHandler(async (req, res, next) => {
   const { id } = req.user;
   const { checked } = req.body;
   const { courseId } = req.params;
-  const { lectureId } = req.query
+  const { lectureId } = req.query;
 
-  const myCourse = await MyCourse.findOne({ userId: id });
-
-  const lectureInfo = {
-    lectureId,
-    marked: checked,
-  };
+  const myCourse = await MyCourse.findOneAndUpdate(
+    {
+      userId: id,
+      "myPurchasedCourses.courseId": courseId,
+    },
+    {
+      $set: {
+        "myPurchasedCourses.$[elem].lectureProgress.$[subElem].marked": checked,
+      },
+    },
+    {
+      arrayFilters: [
+        { "elem.courseId": courseId },
+        { "subElem.lectureId": lectureId },
+      ],
+      upsert: true,
+      new: true,
+    }
+  );
 
   const courseIndex = myCourse.myPurchasedCourses.findIndex(
     (item) => item.courseId === courseId
   );
 
-  if (courseIndex === -1) {
-    return next(new AppError(`you don't access of this course`, 400));
-  }
-
   const lectureIndex = myCourse.myPurchasedCourses[
     courseIndex
   ].lectureProgress.findIndex((item) => item.lectureId === lectureId);
 
-  if (lectureIndex !== -1) {
-    myCourse.myPurchasedCourses[courseIndex].lectureProgress[
-      lectureIndex
-    ].marked = checked;
-  } else {
-    myCourse.myPurchasedCourses[courseIndex].lectureProgress.push(lectureInfo);
-  }
+  if (lectureIndex === -1) {
+    myCourse.myPurchasedCourses[courseIndex].lectureProgress.push({
+      lectureId,
+      marked: checked,
+    });
 
-  await myCourse.save();
+    await myCourse.save();
+  }
 
   res.status(200).json({
     success: true,
@@ -184,37 +221,40 @@ export const updateLectureMark = asyncHandler(async (req, res, next) => {
 export const deleteNote = asyncHandler(async (req, res, next) => {
   const { id } = req.user;
   const { noteIndex } = req.body;
-  const { lectureId } = req.query
+  const { lectureId } = req.query;
   const { courseId } = req.params;
 
-  const myCourse = await MyCourse.findOne({ userId: id });
-
-  const courseIndex = myCourse.myPurchasedCourses.findIndex(
-    (item) => item.courseId === courseId
+  const myCourse = await MyCourse.findOne(
+    { userId: id },
+    {
+      myPurchasedCourses: {
+        $elemMatch: {
+          courseId: courseId,
+        },
+      },
+    }
   );
 
-  if (courseIndex === -1) {
-    return next(new AppError(`you don't have access to this course`, 400));
-  }
-  
-  const lectureIndex = myCourse.myPurchasedCourses[
-    courseIndex
-  ].lectureProgress.findIndex((item) => item.lectureId === lectureId);
-  
+  const lectureIndex = myCourse.myPurchasedCourses[0].lectureProgress.findIndex(
+    (item) => item.lectureId === lectureId
+  );
+
   if (lectureIndex === -1) {
     return next(new AppError(`you don't have access to this course`, 400));
   }
 
   if (
-    !myCourse.myPurchasedCourses[courseIndex].lectureProgress[lectureIndex]
-      .notes[noteIndex]
+    !myCourse.myPurchasedCourses[0].lectureProgress[lectureIndex].notes[
+      noteIndex
+    ]
   ) {
     return next(new AppError(`no note found on this note index`, 400));
   }
 
-  myCourse.myPurchasedCourses[courseIndex].lectureProgress[
-    lectureIndex
-  ].notes.splice(noteIndex, 1);
+  myCourse.myPurchasedCourses[0].lectureProgress[lectureIndex].notes.splice(
+    noteIndex,
+    1
+  );
 
   myCourse.save();
 
